@@ -20,7 +20,8 @@ export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
 			}
 		}
 		${insert(`if (__fx.settings.displayTickNumber)
-      zH.fillText(9 - eh, Math.floor(aAv * 2 + aBA), Math.floor(0.3 * this.j));`)}`)
+        zH.fillText(9 - eh, Math.floor(aAv * 2 + aBA), Math.floor(0.3 * this.j));`)}
+		${insert(`if (__fx.trainer) __fx.trainer._onGameTick(9 - eh);`)}`)
 
   // Add FX Client version info to the game version window
   modifyCode(`4, 1, new g(__L(), b.c + "<br>" + d.e.f("/changelog")

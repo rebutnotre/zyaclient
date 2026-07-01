@@ -27,7 +27,7 @@ export default (/** @type {ModUtils} */ modUtils) => {
 
 	// Reset donation history and leaderboard filter when a new game is started
 	insertCode(`an.init();ai.a5l();bA.pQ.qC = [];bA.hZ.pT = 1;/* here */`,
-	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow();`);
+	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), __fx.restartGame = () => aD.a5h();`);
 
     waitForMinification(() => applyPatches(modUtils))
 }
@@ -40,6 +40,18 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
     const playerId = `${dict.game}.${dict.playerId}`;
     const rawPlayerNames = `${dict.playerData}.${dict.rawPlayerNames}`;
     const gIsSingleplayer = `${dict.game}.${dict.gIsSingleplayer}`;
+
+    // Make tick interval configurable for slow-motion micro mode
+    replaceRawCode(`bh.eW>=eW&&(eW+=bh.aCY*Math.floor(1+(bh.eW-eW)/bh.aCY)`,
+        `bh.eW>=eW&&(eW+=(window.__fx_aCY??bh.aCY)*Math.floor(1+(bh.eW-eW)/(window.__fx_aCY??bh.aCY))`);
+
+    // Expose aTO globally so __fx.selectMap can refresh the map UI before game init
+    replaceRawCode(`function aTO(){aTR(),aTP()}`,
+        `function aTO(){aTR(),aTP()}window.__fx_aTO=aTO;`);
+
+    // Hook a66 (resets aD.data when opening custom scenario) so trainer can re-apply map selection
+    replaceRawCode(`this.a66=function(){aD.data=new a5c}`,
+        `this.a66=function(){aD.data=new a5c;__fx.trainer?.onCustomScenarioOpen?.();}`);
 
     // Replace assets
     replaceOne(/(\(4,"crown",4,")[^"]+"\),/g, "$1" + assets.crownIcon + "\"),");
@@ -69,9 +81,21 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
         replaceOne(/(this\.\w+=Math\.floor\(\(\w+\.\w+\.\w+\(\)\?\.1646:\.126\))\*(\w+\.\w+\),)/g, "$1 * 1.25 * $2");
     }
 
+    // Hook team game end (kl < 7): aD.a1C is set to 1 if local player's slot matches the winning slot
+    replaceRawCode(`aD.kl<7?(a1R=bi.kq[aD.a0z],`,
+        `aD.kl<7?(__fx.trainer?.onGameResult?.(!!aD.a1C),a1R=bi.kq[aD.a0z],`);
+
+    // Hook 1v1 game end (kl === 8): aD.a1C is set to 1 if local player won
+    replaceRawCode(`8===aD.kl?(aD.a1C?aN.a1K(aD.a1P,2):aN.a1K(1-aD.es,3),`,
+        `8===aD.kl?(__fx.trainer?.onGameResult?.(!!aD.a1C),aD.a1C?aN.a1K(aD.a1P,2):aN.a1K(1-aD.es,3),`);
+
     // Increment win counter on wins
     replaceRawCode(`=function(sE){a8.gD[sE]&&(o.ha(sE,2),b.h9<100?xD(0,__L([a8.jx[sE]]),3,sE,ad.gN,ad.kl,-1,!0):xD(0,__L([a8.jx[sE]]),3,sE,ad.gN,ad.kl,-1,!0))`,
         `=function(sE){
+		if (!${gIsSingleplayer} && !${dict.game}.${dict.gIsReplay}) {
+			if (${playerId} === sE) __fx.trainer?.onLocalPlayerWon?.();
+			else __fx.trainer?.onOtherPlayerWon?.();
+		}
 		if (${playerId} === sE && !${gIsSingleplayer} && !${dict.game}.${dict.gIsReplay})
 			__fx.wins.count++, window.localStorage.setItem("fx_winCount", __fx.wins.count),
 			xD(0,"Your Win Count is now " + __fx.wins.count,3,sE,ad.gN,ad.kl,-1,!0);
@@ -83,12 +107,16 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
         replaceRawCode(`,new nQ("☰<br>"+__L(),function(){aD6(3)},aa.ks),new nQ("",function(){at.d5(12)},aa.kg,!1)]`,
             `,new nQ("☰<br>"+__L(),function(){aD6(3)},aa.ks),new nQ("",function(){at.d5(12)},aa.kg,!1),
             new nQ("FX Client settings", function() { __fx.WindowManager.openWindow("settings"); }, "rgba(0, 0, 20, 0.5)"),
-            new nQ("Join/Create custom lobby", function() { __fx.customLobby.showJoinPrompt(); }, "rgba(20, 9, 77, 0.5)")]`)
+            new nQ("Join/Create custom lobby", function() { __fx.customLobby.showJoinPrompt(); }, "rgba(20, 9, 77, 0.5)"),
+            new nQ("Practice Mode", function() { __fx.trainer.showSelector(); }, "rgba(0, 50, 10, 0.5)"),
+            new nQ("Stats", function() { __fx.trainer.showStats(); }, "rgba(50, 30, 0, 0.5)")]`)
         // set position
         replaceRawCode(`aZ.g5.vO(aD3[3].button,x+a0S+gap,a3X+h+gap,a0S,h);`,
             `aZ.g5.vO(aD3[3].button,x+a0S+gap,a3X+h+gap,a0S,h);
             aZ.g5.vO(aD3[5].button, x, a3X + h * 2 + gap * 2, a0S * 2 + gap, h / 3);
-            aZ.g5.vO(aD3[6].button, x, a3X + h * 2.33 + gap * 3, a0S * 2 + gap, h / 3);`);
+            aZ.g5.vO(aD3[6].button, x, a3X + h * 2.33 + gap * 3, a0S * 2 + gap, h / 3);
+            aZ.g5.vO(aD3[7].button, x, a3X + h * 2.66 + gap * 4, a0S * 2 + gap, h / 3);
+            aZ.g5.vO(aD3[8].button, x, a3X + h * 3 + gap * 5, a0S * 2 + gap, h / 3);`);
     }
 
     { // Keybinds

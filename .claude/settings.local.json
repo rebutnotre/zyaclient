@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node build.js --patch-only)",
+      "Bash(node -e ' *)",
+      "Bash(node build.js)"
+    ]
+  }
+}
