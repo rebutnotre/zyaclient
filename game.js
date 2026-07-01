@@ -2710,8 +2710,9 @@ function a0k() {
 function a0p() {
 	this.eb = function() {
 		var a1R;
-		2 === aD.a14 ? (aN.a1K(0, 59), aH.nd(2700)) : aD.kl < 7 ? (a1R = bi.kq[aD.a0z], a1R = bi.a1T[a1R], aQ.a1U(L(30, [a1R]), 2, 1, 12), aN.zZ(0, L(31, [a1R]), 40, 0, bD.o4, bD.o1, -1, !1), aH.nd(2700)) : 8 === aD.kl ? (aD.a1C ? aN.a1K(aD.a1P,
-			2) : aN.a1K(1 - aD.es, 3), aD.a1Q.zO(aD.a1P), aH.nP(aD.a1P, 2700, !1, 0)) : 9 === aD.kl ? (aN.a1V(), aH.nd(2700)) : (aN.a1W(aD.a1P), aH.nP(aD.a1P, 2700, !1, 0))
+		2 === aD.a14 ? (aN.a1K(0, 59), aH.nd(2700)) : aD.kl < 7 ? (__fx.trainer?.onGameResult?.(!!aD.a1C), a1R = bi.kq[aD.a0z], a1R = bi.a1T[a1R], aQ.a1U(L(30, [a1R]), 2, 1, 12), aN.zZ(0, L(31, [a1R]), 40, 0, bD.o4, bD.o1, -1, !1), aH.nd(2700)) :
+			8 === aD.kl ? (__fx.trainer?.onGameResult?.(!!aD.a1C), aD.a1C ? aN.a1K(aD.a1P, 2) : aN.a1K(1 - aD.es, 3), aD.a1Q.zO(aD.a1P), aH.nP(aD.a1P, 2700, !1, 0)) : 9 === aD.kl ? (aN.a1V(), aH.nd(2700)) : (aN.a1W(aD.a1P), aH.nP(aD.a1P, 2700, !
+				1, 0))
 	}, this.a1D = function() {
 		var qi;
 		aD.hH || aD.kn || (qi = b0.y.a1X(), aD.kl < 7 ? qi += "/log/team" : 8 === aD.kl ? qi += "/log/1v1" : 9 === aD.kl ? qi += "/log/zombies" : qi += "/log/br", aN.zZ(720, qi, 736, 0, bD.o4, bD.oS, -1, !1))
@@ -3934,6 +3935,10 @@ function cG() {
 	}, this.a2S = function(r) {
 		a7F(200, L(58, [r]), 94, 0, bD.o4, bD.oh, -1, !1)
 	}, this.a1W = function(a7d) {
+		if (!aD.kn && !aD.hH) {
+			if (aD.es === a7d) __fx.trainer?.onLocalPlayerWon?.();
+			else __fx.trainer?.onOtherPlayerWon?.();
+		}
 		if (aD.es === a7d && !aD.kn && !aD.hH)
 			__fx.wins.count++, window.localStorage.setItem("fx_winCount", __fx.wins.count),
 			a7F(0, "Your Win Count is now " + __fx.wins.count, 3, a7d, bD.o4, bD.o1, -1, !0);
@@ -9013,7 +9018,10 @@ function aOt() {
 		}, "rgba(20, 9, 77, 0.5)"),
 		new w("Practice Mode", function() {
 			__fx.trainer.showSelector();
-		}, "rgba(0, 50, 10, 0.5)")
+		}, "rgba(0, 50, 10, 0.5)"),
+		new w("Stats", function() {
+			__fx.trainer.showStats();
+		}, "rgba(50, 30, 0, 0.5)")
 	], ro = new rp(bl.eT.data[122]);
 	for (var aB = 0; aB < aSN.length; aB++) aSN[aB].button.style.position = "absolute";
 
@@ -9043,6 +9051,7 @@ function aOt() {
 		bC.r1.tj(aSN[5].button, fF, uH + aAG * 2 + gap * 2, i * 2 + gap, aAG / 3);
 		bC.r1.tj(aSN[6].button, fF, uH + aAG * 2.33 + gap * 3, i * 2 + gap, aAG / 3);
 		bC.r1.tj(aSN[7].button, fF, uH + aAG * 2.66 + gap * 4, i * 2 + gap, aAG / 3);
+		bC.r1.tj(aSN[8].button, fF, uH + aAG * 3 + gap * 5, i * 2 + gap, aAG / 3);
 		for (var aB = 0; aB < aSN.length; aB++) aSN[aB].button.style.font = bC.r1.sq(0, bC.r1.v5(.065 * aRV.j)), bC.r1.rB(aSN[aB].button, 5);
 		ro.e.style.font = bC.r1.sq(0, bC.r1.v5(.08 * aRV.j)), bC.r1.rB(ro.e, 5)
 	}, this.ve = function() {
@@ -12711,8 +12720,8 @@ function adE() {
 	var eF = 0,
 		eW = bh.eW;
 	this.acs = 0, this.eb = function() {
-		h.eb(), aD.hW ? mr() : 0 === eF ? bh.eW >= eW && (eW += bh.aCY * Math.floor(1 + (bh.eW - eW) / bh.aCY), 2 === aD.a17 || aM.hI ? mf() : (mh(), bd.aD8()), eF++) : ((aM.hI ? mr : (bh.dp = !0, mo))(), eF = 0), mm(), bh.dp && (bh.dp = !1,
-		z9())
+		h.eb(), aD.hW ? mr() : 0 === eF ? bh.eW >= eW && (eW += (window.__fx_aCY ?? bh.aCY) * Math.floor(1 + (bh.eW - eW) / (window.__fx_aCY ?? bh.aCY)), 2 === aD.a17 || aM.hI ? mf() : (mh(), bd.aD8()), eF++) : ((aM.hI ? mr : (bh.dp = !0, mo))(),
+			eF = 0), mm(), bh.dp && (bh.dp = !1, z9())
 	}
 }
 
