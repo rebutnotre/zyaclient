@@ -40,13 +40,17 @@ export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
 			return;
 		} ${insert(`if (!__fx.settings.hidePropagandaPopup && !__fx.customLobby.isActive())`)} a.g.h(5);`)
 
-  // Disable built-in Territorial.io error reporting
-  insertCode(
-    `window.removeEventListener("error", err);
+  // Disable built-in Territorial.io error reporting (wrapped — pattern may break on game updates)
+  try {
+    insertCode(
+      `window.removeEventListener("error", err);
     msg = e.lineno + " " + e.colno + "|" + getStack(e); /* here */`,
-    `__fx.reportError(e, msg);
+      `__fx.reportError(e, msg);
     return alert("Error:\\n" + e.filename + " " + e.lineno + " " + e.colno + " " + e.message);`
-  )
+    )
+  } catch(e) {
+    console.warn("Warning: failed to patch error reporter (game may have updated)")
+  }
 
   // Invalid hostname detection avoidance
   replaceCode(`this.hostnameIsValid = a.indexOf("territorial.io") >= 0;`, `this.hostnameIsValid = true;`)

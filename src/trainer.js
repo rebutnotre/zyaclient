@@ -49,9 +49,9 @@ const openings = {
   "freddo-v1": {
     name: "Freddo V1",
     cycles: [
-      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }], expectedLand: 112,  expectedTroops: 810  },
-      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa"     }], expectedLand: 312,  expectedTroops: 1300 },
-      { attacks: [{ pct: 32.1, tick: 7, keys: "aa"       }], expectedLand: 612,  expectedTroops: 2000 },
+      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }], expectedLand: 112,  expectedTroops: 837  },
+      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa"     }], expectedLand: 312,  expectedTroops: 1371 },
+      { attacks: [{ pct: 32.1, tick: 7, keys: "aa"       }], expectedLand: 612,  expectedTroops: 2351 },
       { attacks: [{ pct: 28.2, tick: 5 }, { pct: 36.3, tick: 7 }, { pct: 36.3, tick: 8 }], expectedLand: 1740, expectedTroops: 3018 },
       { attacks: [{ pct: 28.2, tick: 6 }, { pct: 32.1, tick: 8 }, { pct: 32.1, tick: 9 }], expectedLand: 3120, expectedTroops: 4973 },
     ]
@@ -59,9 +59,9 @@ const openings = {
   "freddo-v2-0": {
     name: "FreddoV2.0",
     cycles: [
-      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }],                                                                          expectedLand: 112,  expectedTroops: 810  },
-      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa" }],                                                                              expectedLand: 312,  expectedTroops: 1300 },
-      { attacks: [{ pct: 32.1, tick: 7, keys: "aa" }],                                                                                expectedLand: 612,  expectedTroops: 2000 },
+      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }],                                                                          expectedLand: 112,  expectedTroops: 837  },
+      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa" }],                                                                              expectedLand: 312,  expectedTroops: 1371 },
+      { attacks: [{ pct: 32.1, tick: 7, keys: "aa" }],                                                                                expectedLand: 612,  expectedTroops: 2351 },
       { attacks: [{ pct: 42,   tick: 5 }, { pct: 42,   tick: 7 }, { pct: 42,   tick: 9 }],                                          expectedLand: 1860, expectedTroops: 2796 },
       { attacks: [{ pct: 39,   tick: 5 }, { pct: 39,   tick: 7 }, { pct: 39,   tick: 9 }],                                          expectedLand: 3280, expectedTroops: 4633 },
     ]
@@ -69,9 +69,9 @@ const openings = {
   "freddo-v2-1": {
     name: "FreddoV2.1",
     cycles: [
-      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }],                                                                          expectedLand: 112,  expectedTroops: 810  },
-      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa" }],                                                                              expectedLand: 312,  expectedTroops: 1300 },
-      { attacks: [{ pct: 32.1, tick: 7, keys: "aa" }],                                                                                expectedLand: 612,  expectedTroops: 2000 },
+      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }],                                                                          expectedLand: 112,  expectedTroops: 837  },
+      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa" }],                                                                              expectedLand: 312,  expectedTroops: 1371 },
+      { attacks: [{ pct: 32.1, tick: 7, keys: "aa" }],                                                                                expectedLand: 612,  expectedTroops: 2351 },
       { attacks: [{ pct: 35,   tick: 5 }, { pct: 42,   tick: 7 }, { pct: 42,   tick: 9 }],                                          expectedLand: 1860, expectedTroops: 2838 },
       { attacks: [{ pct: 39,   tick: 5 }, { pct: 35,   tick: 7 }, { pct: 35,   tick: 9 }],                                          expectedLand: 3280, expectedTroops: 4705 },
     ]
@@ -79,11 +79,11 @@ const openings = {
   "greenbiscuit-v1": {
     name: "GreenBiscuit V1",
     cycles: [
-      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }], expectedLand: 112,  expectedTroops: 810  },
-      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa"     }], expectedLand: 312,  expectedTroops: 1300 },
-      { attacks: [{ pct: 32.1, tick: 7, keys: "aa"       }], expectedLand: 612,  expectedTroops: 2000 },
-      { attacks: [{ pct: 30.7, tick: 7, keys: "a"        }], expectedLand: 1104, expectedTroops: 3500 },
-      { attacks: [{ pct: 43.7, tick: 6, keys: "wwdd"     }], expectedLand: 2244, expectedTroops: 5400 },
+      { attacks: [{ pct: 28.2, tick: 7, keys: "sssssddd" }], expectedLand: 112,  expectedTroops: 837  },
+      { attacks: [{ pct: 34.5, tick: 7, keys: "wwaa"     }], expectedLand: 312,  expectedTroops: 1371 },
+      { attacks: [{ pct: 32.1, tick: 7, keys: "aa"       }], expectedLand: 612,  expectedTroops: 2351 },
+      { attacks: [{ pct: 30.7, tick: 7, keys: "a"        }], expectedLand: 1104, expectedTroops: 4034 },
+      { attacks: [{ pct: 43.7, tick: 6, keys: "wwdd"     }], expectedLand: 2244, expectedTroops: 6246 },
     ]
   },
   "thigh-v2": {
@@ -95,7 +95,7 @@ const openings = {
       { attacks: [{ pct: 24.7, tick: 5, keys: "ss" }, { pct: 32.2, tick: 7, keys: "ww" }, { pct: 36.8, tick: 8, keys: "w" }, { pct: 42.1, tick: 9, keys: "w" }],   expectedLand: 1984, expectedTroops: 2830  },
       { attacks: [{ pct: 38.3, tick: 6, keys: "aaa" }, { pct: 35.9, tick: 8, keys: "aa" }, { pct: 35.9, tick: 9 }],                  expectedLand: 3444, expectedTroops: 4776  },
     ]
-  }
+  },
 };
 
 function getSavedMaxCycle(key, total) {
@@ -124,15 +124,6 @@ const state = {
 };
 
 function resetCycleClicks() { state.cycleClicks = []; }
-
-// Record clicks on the game canvas during active singleplayer gameplay
-document.getElementById("canvasA").addEventListener("mousedown", () => {
-  if (!state.active || state.paused || state.waitingForNewGame || state.waitingForCycleStart) return;
-  if (!getVar("gIsSingleplayer") || getVar("gameState") === 0) return;
-  if (state.currentCycle < 1 || state.currentCycle > state.maxCycle) return;
-  if (state.lastTick < 0) return;
-  state.cycleClicks.push(state.lastTick);
-});
 
 // ─── Click analysis ───────────────────────────────────────────────────────────
 
@@ -396,7 +387,17 @@ window.addEventListener("beforeunload", () => finalizeMpGame(false));
 // ─── Timer stats ─────────────────────────────────────────────────────────────
 
 function timerStorageKey() {
-  return state.timerMs === 97000 ? "fx_stats_137" : "fx_stats_050";
+  if (state.timerMs === 97000) return "fx_stats_137";
+  if (state.timerMs === 72000) return "fx_stats_112";
+  if (state.timerMs === 50000) return "fx_stats_050";
+  return "fx_stats_033";
+}
+
+function timerEffScore(land, troops) {
+  if (state.timerMs === 97000) return land + troops / 6;
+  if (state.timerMs === 72000) return land + troops / 5;
+  if (state.timerMs === 50000) return land + troops / 4;
+  return land;
 }
 
 function saveTimerResult(land, troops) {
@@ -454,7 +455,7 @@ function renderStatsTab(mainTab, subTab = "137", mpMode = "contest") {
     // Sub-tabs: 1:37 | 0:50
     const subRow = document.createElement("div");
     subRow.style.cssText = "display:flex;gap:8px;justify-content:center;margin-bottom:12px";
-    [["137", "1:37"], ["050", "0:50"], ["op", "Openings"]].forEach(([k, lbl]) => {
+    [["137", "1:37"], ["112", "1:12"], ["050", "0:50"], ["033", "0:33"], ["op", "Openings"]].forEach(([k, lbl]) => {
       const btn = document.createElement("button");
       btn.textContent = lbl;
       btn.style.opacity = k === subTab ? "1" : "0.4";
@@ -528,6 +529,95 @@ function renderStatsTab(mainTab, subTab = "137", mpMode = "contest") {
           table.appendChild(tr);
         });
         statsEl.appendChild(table);
+
+        // Graph
+        const allData = JSON.parse(localStorage.getItem(storageKey) ?? "[]");
+        if (allData.length > 1) {
+          let graphN = Math.min(10, allData.length);
+          const graphWrap = document.createElement("div");
+          graphWrap.style.cssText = "margin-top:12px";
+
+          const toggleRow = document.createElement("div");
+          toggleRow.style.cssText = "display:flex;gap:6px;justify-content:center;margin-bottom:6px";
+
+          const canvas = document.createElement("canvas");
+          canvas.width = 320; canvas.height = 120;
+          canvas.style.cssText = "width:100%;display:block";
+
+          function drawGraph(n) {
+            graphN = n;
+            const slice = allData.slice(-n);
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const W = canvas.width, H = canvas.height;
+            const pad = { top: 10, bottom: 20, left: 10, right: 10 };
+            const iW = W - pad.left - pad.right;
+            const iH = H - pad.top - pad.bottom;
+            const lands = slice.map(d => d.land);
+            const minL = Math.min(...lands), maxL = Math.max(...lands);
+            const range = maxL - minL || 1;
+            const x = i => pad.left + (slice.length === 1 ? iW / 2 : (i / (slice.length - 1)) * iW);
+            const y = v => pad.top + iH - ((v - minL) / range) * iH;
+
+            // avg line
+            const avg = lands.reduce((s, v) => s + v, 0) / lands.length;
+            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(pad.left, y(avg));
+            ctx.lineTo(W - pad.right, y(avg));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // line
+            ctx.strokeStyle = "#4af";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            slice.forEach((d, i) => i === 0 ? ctx.moveTo(x(i), y(d.land)) : ctx.lineTo(x(i), y(d.land)));
+            ctx.stroke();
+
+            // dots
+            slice.forEach((d, i) => {
+              ctx.fillStyle = "#4af";
+              ctx.beginPath();
+              ctx.arc(x(i), y(d.land), 3, 0, Math.PI * 2);
+              ctx.fill();
+            });
+
+            // x labels: first and last run numbers
+            ctx.fillStyle = "rgba(255,255,255,0.5)";
+            ctx.font = "10px sans-serif";
+            ctx.textAlign = "left";
+            ctx.fillText(`#${allData.length - slice.length + 1}`, pad.left, H - 4);
+            ctx.textAlign = "right";
+            ctx.fillText(`#${allData.length}`, W - pad.right, H - 4);
+
+            // y labels
+            ctx.textAlign = "right";
+            ctx.fillText(maxL.toLocaleString(), pad.left + 8, pad.top + 8);
+            ctx.fillText(minL.toLocaleString(), pad.left + 8, H - pad.bottom - 4);
+
+            // update toggle button styles
+            [10, 50, 0].forEach((v, idx) => {
+              const btn = toggleRow.children[idx];
+              if (btn) btn.style.opacity = graphN === (v || allData.length) ? "1" : "0.4";
+            });
+          }
+
+          [[10, "Last 10"], [50, "Last 50"], [0, "All"]].forEach(([n, lbl]) => {
+            const btn = document.createElement("button");
+            btn.textContent = lbl;
+            btn.style.cssText = "font-size:.8em;padding:2px 8px";
+            btn.addEventListener("click", () => drawGraph(n || allData.length));
+            toggleRow.appendChild(btn);
+          });
+
+          graphWrap.appendChild(toggleRow);
+          graphWrap.appendChild(canvas);
+          statsEl.appendChild(graphWrap);
+          drawGraph(Math.min(10, allData.length));
+        }
+
         const clearBtn = document.createElement("button");
         clearBtn.textContent = "Clear";
         clearBtn.style.cssText = "margin-top:10px;opacity:.5;font-size:.85em";
@@ -575,11 +665,56 @@ function renderStatsTab(mainTab, subTab = "137", mpMode = "contest") {
     }
   }
 
+  const btnRow = document.createElement("div");
+  btnRow.style.cssText = "display:flex;gap:8px;justify-content:center;margin-top:10px";
+
+  const exportBtn = document.createElement("button");
+  exportBtn.textContent = "Export";
+  exportBtn.style.opacity = "0.6";
+  exportBtn.addEventListener("click", () => {
+    const keys = Object.keys(localStorage).filter(k => k.startsWith("fx_stats_") || k === "fx_winCount");
+    const data = {};
+    keys.forEach(k => { data[k] = localStorage.getItem(k); });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = "fxclient_stats.json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  const importBtn = document.createElement("button");
+  importBtn.textContent = "Import";
+  importBtn.style.opacity = "0.6";
+  importBtn.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, v));
+          renderStatsTab(mainTab, subTab, mpMode);
+        } catch { alert("Invalid stats file."); }
+      };
+      reader.readAsText(file);
+    });
+    input.click();
+  });
+
   const closeBtn = document.createElement("button");
   closeBtn.textContent = "Close";
-  closeBtn.style.marginTop = "10px";
   closeBtn.addEventListener("click", () => WindowManager.closeWindow("trainerStats"));
-  statsEl.appendChild(closeBtn);
+
+  btnRow.appendChild(exportBtn);
+  btnRow.appendChild(importBtn);
+  btnRow.appendChild(closeBtn);
+  statsEl.appendChild(btnRow);
 }
 
 export function showStats() {
@@ -590,6 +725,14 @@ export function showStats() {
 // ─── Timer result ─────────────────────────────────────────────────────────────
 
 function showTimerResult(land, troops) {
+  // Check for PB before saving so we can compare against previous best
+  const allPrevRuns = JSON.parse(localStorage.getItem(timerStorageKey()) ?? "[]");
+  const score = timerEffScore(land, troops);
+  const prevBestScore = allPrevRuns.length > 0
+    ? Math.max(...allPrevRuns.map(d => timerEffScore(d.land, d.troops)))
+    : -Infinity;
+  const newPB = allPrevRuns.length > 0 && score > prevBestScore;
+
   saveTimerResult(land, troops);
 
   resultEl.innerHTML = "";
@@ -602,12 +745,22 @@ function showTimerResult(land, troops) {
   statsP.innerHTML = `Land: <b>${land}</b><br>Troops: <b>${troops}</b>`;
   resultEl.appendChild(statsP);
 
+  // Milestone
+  if (newPB) {
+    const milestoneP = document.createElement("p");
+    milestoneP.style.cssText = "color:#ffd700;font-weight:bold;margin-top:6px";
+    milestoneP.textContent = `★ New PB: ${Math.round(score).toLocaleString()}`;
+    resultEl.appendChild(milestoneP);
+  }
+
   // Show session best inline
   const allStats = loadTimerStats(timerStorageKey());
   if (allStats && allStats.runs > 1) {
+    const allRuns = JSON.parse(localStorage.getItem(timerStorageKey()) ?? "[]");
+    const bestRun = allRuns.reduce((b, d) => timerEffScore(d.land, d.troops) > timerEffScore(b.land, b.troops) ? d : b, allRuns[0]);
     const pb = document.createElement("p");
     pb.style.cssText = "font-size:.9em;opacity:.7;margin-top:4px";
-    pb.innerHTML = `Best: <b>${allStats.best.land}L ${allStats.best.troops}T</b> · Avg: <b>${allStats.avgLand}L</b> · Runs: <b>${allStats.runs}</b>`;
+    pb.innerHTML = `Best: <b>${bestRun.land}L ${bestRun.troops}T</b> · Avg: <b>${allStats.avgLand}L</b> · Runs: <b>${allStats.runs}</b>`;
     resultEl.appendChild(pb);
   }
 
@@ -777,9 +930,59 @@ function showResult(cycleIdx, snapshot) {
 
     resultEl.append(restartBtn, stopBtn, microLabel, microRow);
   } else if (!success) {
+    // Deltas
+    const landDiff   = land   - cycle.expectedLand;
+    const troopsDiff = troops - cycle.expectedTroops;
+    const sign = n => n > 0 ? `+${n}` : `${n}`;
+    const deltaP = document.createElement("p");
+    deltaP.style.cssText = "font-size:.9em;margin-top:2px";
+    const landCol   = landDiff   === 0 ? "inherit" : landDiff   > 0 ? "#f4a460" : "#f4a460";
+    const troopsCol = troopsDiff === 0 ? "inherit" : "#f4a460";
+    const landPart   = landDiff   !== 0 ? `<span style="color:${landCol}">${sign(landDiff)} land</span>` : `<span style="opacity:.5">land ✓</span>`;
+    const troopsPart = troopsDiff !== 0 ? `<span style="color:${troopsCol}">${sign(troopsDiff)} troops</span>` : `<span style="opacity:.5">troops ✓</span>`;
+    deltaP.innerHTML = `${landPart} &nbsp; ${troopsPart}`;
+    resultEl.appendChild(deltaP);
+
+    // Diagnosis
+    const { matched, extraClicks } = analyzeClicks(clicksThisCycle, attackTicks);
+    const missedOrWrong = matched.filter(m => m.actual === null || m.actual !== m.expected).length;
+    const diagP = document.createElement("p");
+    diagP.style.cssText = "font-size:.9em;margin-top:4px;font-style:italic;opacity:.85";
+    let diag = "";
+    if (clicksThisCycle.length === 0) {
+      diag = "No attacks detected — did you forget to click?";
+    } else if (missedOrWrong > 0 && landDiff > 0 && troopsDiff < 0) {
+      diag = "Late attack — more time passed, so more troops were spent taking extra land.";
+    } else if (missedOrWrong > 0 && landDiff < 0 && troopsDiff > 0) {
+      diag = "Early attack — fewer troops were ready, so less land was taken and more were retained.";
+    } else if (missedOrWrong > 0) {
+      diag = "Timing was off — fix the click timing to hit the target.";
+    } else if (extraClicks.length > 0 && landOk) {
+      diag = `Extra clicks detected — timing was correct but double-clicking can waste troops.`;
+    } else if (extraClicks.length > 0) {
+      diag = `Extra clicks affected the result — only click at the expected ticks.`;
+    } else if (landOk && !troopsOk) {
+      diag = troopsDiff < 0
+        ? "Correct land but troops too low — attack % was slightly too high."
+        : "Correct land but troops too high — attack % was slightly too low.";
+    } else if (!landOk && troopsOk) {
+      diag = landDiff > 0
+        ? "Correct troops but too much land — attack % too low (not enough troops pushed out)."
+        : "Correct troops but too little land — attack % too high (overspent troops on fewer tiles).";
+    } else if (landDiff > 0 && troopsDiff < 0) {
+      diag = "Attack % too high — sent too many troops, capturing extra land.";
+    } else if (landDiff < 0 && troopsDiff > 0) {
+      diag = "Attack % too low — sent too few troops, capturing less land.";
+    } else {
+      diag = "Both land and troops off — check timing and attack %.";
+    }
+    diagP.textContent = diag;
+    resultEl.appendChild(diagP);
+
+    // Timing breakdown
     const clickLines = buildClickFeedback(clicksThisCycle, attackTicks);
     const timingSection = document.createElement("div");
-    timingSection.style.cssText = "text-align:left;font-size:.9em;border-top:1px solid rgba(255,255,255,0.25);padding-top:8px;margin-top:4px";
+    timingSection.style.cssText = "text-align:left;font-size:.9em;border-top:1px solid rgba(255,255,255,0.25);padding-top:8px;margin-top:6px";
 
     const timingTitle = document.createElement("b");
     timingTitle.textContent = "Attack timing:";
@@ -793,17 +996,15 @@ function showResult(cycleIdx, snapshot) {
       timingList.appendChild(li);
     });
     timingSection.appendChild(timingList);
-    resultEl.appendChild(timingSection);
 
-    if (!troopsOk) {
-      const pctHint = document.createElement("p");
-      pctHint.style.cssText = "font-size:.9em;margin-top:6px";
-      const attackHints = cycle.attacks.map((a, i) => `${NUMS[i] ?? `${i+1}.`} <b>${a.pct}%</b>`).join(" ");
-      pctHint.innerHTML = troops < cycle.expectedTroops
-        ? `Troops too low — attack % was likely too high<br>Expected: ${attackHints}`
-        : `Troops too high — attack % was likely too low<br>Expected: ${attackHints}`;
-      resultEl.appendChild(pctHint);
-    }
+    // Expected %s
+    const attackHints = cycle.attacks.map((a, i) => `${NUMS[i] ?? `${i+1}.`} <b>${a.pct}%</b> tick <b>${a.tick}</b>`).join("  ");
+    const pctHint = document.createElement("p");
+    pctHint.style.cssText = "font-size:.85em;margin-top:6px;opacity:.7";
+    pctHint.innerHTML = `Expected: ${attackHints}`;
+    timingSection.appendChild(pctHint);
+
+    resultEl.appendChild(timingSection);
 
     const restartBtn = document.createElement("button");
     restartBtn.textContent = "Restart game";
@@ -912,7 +1113,7 @@ const timerLabel = document.createElement("label");
 timerLabel.textContent = "Timer: ";
 const timerSelect = document.createElement("select");
 timerLabel.appendChild(timerSelect);
-[["137", "1:37 Timer"], ["050", "0:50 Timer"]].forEach(([val, txt]) => {
+[["137", "1:37 Timer"], ["112", "1:12 Timer"], ["050", "0:50 Timer"], ["033", "0:33 Timer"]].forEach(([val, txt]) => {
   const opt = document.createElement("option");
   opt.value = val; opt.textContent = txt;
   timerSelect.appendChild(opt);
@@ -955,7 +1156,7 @@ armBtn.addEventListener("click", () => {
       active: true, waitingForNewGame: false, waitingForCycleStart: false,
       openingKey: null, maxCycle: 0, currentCycle: 1, lastTick: -1,
       paused: false, fullOpening: false, mode: 'timer',
-      timerMs: key === "137" ? 97000 : 50000,
+      timerMs: key === "137" ? 97000 : key === "112" ? 72000 : key === "050" ? 50000 : 33000,
       cycleCount: 0, _timerArmed: false,
     });
   } else {
@@ -1121,4 +1322,12 @@ export function onCustomScenarioOpen() {
   window.__fx_aTO?.();
 }
 
-export default { showSelector, showStats, _onGameTick, onGameInit, onCustomScenarioOpen, onLocalPlayerWon, onOtherPlayerWon, onGameResult, get active() { return state.active; } };
+export function onAttackSent() {
+  if (!state.active || state.paused || state.waitingForNewGame || state.waitingForCycleStart) return;
+  if (!getVar("gIsSingleplayer") || getVar("gameState") === 0) return;
+  if (state.currentCycle < 1 || state.currentCycle > state.maxCycle) return;
+  if (state.lastTick < 0) return;
+  state.cycleClicks.push(state.lastTick);
+}
+
+export default { showSelector, showStats, _onGameTick, onGameInit, onCustomScenarioOpen, onAttackSent, onLocalPlayerWon, onOtherPlayerWon, onGameResult, get active() { return state.active; } };

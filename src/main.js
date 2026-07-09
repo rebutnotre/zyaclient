@@ -12,6 +12,7 @@ import hoveringTooltip from "./hoveringTooltip.js";
 import { keybindFunctions, keybindHandler, mobileKeybinds } from "./keybinds.js";
 import customLobby from './customLobby.js';
 import trainer from './trainer.js';
+import './replayScrubber.js';
 import { displayChangelog } from './changelog.js';
 import { reportError } from './debugging.js';
 
@@ -88,9 +89,9 @@ __fx.customLobby = customLobby;
 __fx.trainer = trainer;
 
 __fx.selectMap = (type, idx) => {
-  if (window.aD?.data) {
-    window.aD.data.mapType = type;
-    window.aD.data.mapProceduralIndex = idx;
+  if (window.aE?.data) {
+    window.aE.data.mapType = type;
+    window.aE.data.mapProceduralIndex = idx;
   }
   // aTO() touches the custom scenario UI which may not exist yet — ignore if so
   try { window.__fx_aTO?.(); } catch(e) {}

@@ -27,7 +27,7 @@ export default (/** @type {ModUtils} */ modUtils) => {
 
 	// Reset donation history and leaderboard filter when a new game is started
 	insertCode(`an.init();ai.a5l();bA.pQ.qC = [];bA.hZ.pT = 1;/* here */`,
-	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), __fx.restartGame = () => aD.a5h();`);
+	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), __fx.restartGame = () => aE.a5i();`);
 
     waitForMinification(() => applyPatches(modUtils))
 }
@@ -80,6 +80,18 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
         // increase the size of the side panel by 25% to make the text easier to read
         replaceOne(/(this\.\w+=Math\.floor\(\(\w+\.\w+\.\w+\(\)\?\.1646:\.126\))\*(\w+\.\w+\),)/g, "$1 * 1.25 * $2");
     }
+
+    // Hook bB.hZ.hg — the troop-send function called for all attacks (mouse OR spacebar)
+    replaceRawCode(`this.hg=function(il,jd){this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`,
+        `this.hg=function(il,jd){__fx.trainer?.onAttackSent?.();this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`);
+
+    // Expose replay progress (tick + total) so the scrubber can read position
+    replaceRawCode(`aCC=aD.hH?aB/aD.a5b:`,
+        `aCC=aD.hH?(window.__fx_replayTick=aB,window.__fx_replayTotal=aD.a5b,aB/aD.a5b):`);
+
+    // Allow overriding the replay speed index from outside (scrubber fast-forwards by setting 0)
+    replaceRawCode(`},this.a9m=function(){return a9k[a9l]},this.zC=function(){return a9h.fH}`,
+        `},this.a9m=function(){return a9k[null!=window.__fx_replaySpeedIdx?(a9l=window.__fx_replaySpeedIdx):a9l]},this.zC=function(){return a9h.fH}`);
 
     // Hook team game end (kl < 7): aD.a1C is set to 1 if local player's slot matches the winning slot
     replaceRawCode(`aD.kl<7?(a1R=bi.kq[aD.a0z],`,
