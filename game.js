@@ -4668,8 +4668,8 @@ function cO() {
 			aBA = Math.floor(this.k / 12),
 			aB6 = .5 * (j + aB6) + aBA;
 		(aB6 + tS + aAv <= j || 1e3 <= aB7 && (aB9 = "+" + Math.floor(aB7 / 1e3) + "K", aB6 + (tS = zH.measureText(aB9).width) + aAv <= j)) && zH.fillText(aB9, Math.floor(aB6 + .5 * tS), Math.floor(.3 * this.k)), __fx.settings
-			.displayTickNumber && zH.fillText(9 - eh, Math.floor(2 * aAv + aBA), Math.floor(.3 * this.k)), __fx.trainer && __fx.trainer._onGameTick(9 - eh), zH.fillStyle = bE.o5, zH.fillRect(0, 0, j, 1), zH.fillRect(0, 0, 1, this.k), zH.fillRect(
-				0, this.k - 1, j, 1), zH.fillRect(j - 1, 0, 1, this.k)
+			.displayTickNumber && zH.fillText(9 - eh, Math.floor(2 * aAv + aBA), Math.floor(.3 * this.k)), zH.fillStyle = bE.o5, zH.fillRect(0, 0, j, 1), zH.fillRect(0, 0, 1, this.k), zH.fillRect(0, this.k - 1, j, 1), zH.fillRect(j - 1, 0, 1,
+				this.k)
 	}, this.aB4 = function() {
 		var eh = bi.kR() % 100,
 			yF = (eh = 9 - bO.fa(eh -= eh % 10, 10), Math.floor(eh * (this.k - aAv) / 9));
