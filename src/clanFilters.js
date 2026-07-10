@@ -73,8 +73,10 @@ export const leaderboardFilter = new (function() {
     this.filterByOwnClan = () => {
         this.playersToInclude = [];
         const playerId = getVar("playerId");
-        const ownClan = this.parseClanFromPlayerName(getVar("rawPlayerNames")[playerId]);
-        getVar("rawPlayerNames").forEach((name, id) => {
+        const rawPlayerNames = getVar("rawPlayerNames");
+        if (!rawPlayerNames || playerId == null) return;
+        const ownClan = this.parseClanFromPlayerName(rawPlayerNames[playerId]);
+        rawPlayerNames.forEach((name, id) => {
             if (id === playerId || this.parseClanFromPlayerName(name) === ownClan) this.playersToInclude.push(id);
         });
         this.enabled = true;
@@ -93,9 +95,12 @@ export const clanFilter = new (function() {
     this.inOwnClan.fill(false);
     this.refresh = () => {
         const gHumans = getVar("gHumans");
-        const ownClan = leaderboardFilter.parseClanFromPlayerName(getVar("rawPlayerNames")[getVar("playerId")]);
+        const rawPlayerNames = getVar("rawPlayerNames");
+        const playerId = getVar("playerId");
+        if (!rawPlayerNames || playerId == null) return;
+        const ownClan = leaderboardFilter.parseClanFromPlayerName(rawPlayerNames[playerId]);
         if (ownClan === null) this.inOwnClan.fill(false);
-        else getVar("rawPlayerNames").forEach((name, id) => {
+        else rawPlayerNames.forEach((name, id) => {
             this.inOwnClan[id] = id < gHumans && leaderboardFilter.parseClanFromPlayerName(name) === ownClan;
         });
     }
