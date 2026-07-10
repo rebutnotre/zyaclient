@@ -16,6 +16,7 @@
   },
   "author": "",
   "license": "ISC",
+  "sideEffects": true,
   "bugs": {
     "url": "https://github.com/fxclient/FXclient/issues"
   },

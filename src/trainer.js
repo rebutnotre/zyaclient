@@ -95,7 +95,7 @@ const openings = {
       { attacks: [{ pct: 24.7, tick: 5, keys: "ss" }, { pct: 32.2, tick: 7, keys: "ww" }, { pct: 36.8, tick: 8, keys: "w" }, { pct: 42.1, tick: 9, keys: "w" }],   expectedLand: 1984, expectedTroops: 2830  },
       { attacks: [{ pct: 38.3, tick: 6, keys: "aaa" }, { pct: 35.9, tick: 8, keys: "aa" }, { pct: 35.9, tick: 9 }],                  expectedLand: 3444, expectedTroops: 4776  },
     ]
-  },
+  }
 };
 
 function getSavedMaxCycle(key, total) {

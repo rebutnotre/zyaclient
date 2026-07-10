@@ -27,7 +27,7 @@ export default (/** @type {ModUtils} */ modUtils) => {
 
 	// Reset donation history and leaderboard filter when a new game is started
 	insertCode(`an.init();ai.a5l();bA.pQ.qC = [];bA.hZ.pT = 1;/* here */`,
-	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), __fx.restartGame = () => aE.a5i();`);
+	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), __fx.restartGame = () => aE.a5i(), window.aE = aE, window.__fx_replayPhase = 0;`);
 
     waitForMinification(() => applyPatches(modUtils))
 }
@@ -85,9 +85,13 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
     replaceRawCode(`this.hg=function(il,jd){this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`,
         `this.hg=function(il,jd){__fx.trainer?.onAttackSent?.();this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`);
 
-    // Expose replay progress (tick + total) so the scrubber can read position
+    // Expose spawn-phase replay progress
     replaceRawCode(`aCC=aD.hH?aB/aD.a5b:`,
         `aCC=aD.hH?(window.__fx_replayTick=aB,window.__fx_replayTotal=aD.a5b,aB/aD.a5b):`);
+
+    // Expose main-game replay progress every tick: ad2 = current event index, adE = full events array
+    replaceRawCode(`adD=bC.qM.aWu,adE=bC.qM.aWv;if(!(ad2>=adE.length))`,
+        `adD=bC.qM.aWu,adE=bC.qM.aWv;window.__fx_replayPhase=1,window.__fx_replayTick=ad2,window.__fx_replayTotal=adE.length;if(!(ad2>=adE.length))`);
 
     // Allow overriding the replay speed index from outside (scrubber fast-forwards by setting 0)
     replaceRawCode(`},this.a9m=function(){return a9k[a9l]},this.zC=function(){return a9h.fH}`,

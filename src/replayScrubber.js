@@ -5,14 +5,14 @@
 const SCRUBBER_H = 18;
 
 // ── DOM ──────────────────────────────────────────────────────────────────────
-const wrap = document.createElement('div');
+const wrap = document.createElement('section');
 wrap.style.cssText = [
     'position:fixed', 'bottom:0', 'left:0', 'right:0',
     `height:${SCRUBBER_H}px`,
     'background:rgba(0,0,0,0.65)',
     'display:none', 'z-index:9999',
-    'cursor:pointer', 'user-select:none',
-    'box-sizing:border-box',
+    'user-select:none', 'box-sizing:border-box',
+    'pointer-events:none',  // let game clicks pass through; we use window listeners
 ].join(';');
 
 const track = document.createElement('div');
@@ -43,7 +43,7 @@ let _seekTarget   = null;   // 0-1 target after seek fires, null when idle
 let _restartDone  = false;  // guard: did we already restart for backwards seek?
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-function isReplay() { return !!window.aE?.hH; }
+function isReplay() { return !!window.aE?.hI; }
 
 function replayProgress() {
     const tick  = window.__fx_replayTick  ?? 0;
@@ -82,21 +82,28 @@ function startSeek(targetP) {
 
 function tickSeek() {
     if (_seekTarget === null) return;
-    if (!_restartDone) return; // waiting for restart to complete
+    if (!_restartDone) return;
+    // Don't stop during spawn phase — wait until main game starts
+    if (window.__fx_replayPhase !== 1) return;
     const current = replayProgress();
     if (current >= _seekTarget - 0.003) {
         clearSpeedIdx();
-        _seekTarget   = null;
-        _restartDone  = false;
+        _seekTarget  = null;
+        _restartDone = false;
     }
 }
 
 // ── Drag events ──────────────────────────────────────────────────────────────
-wrap.addEventListener('mousedown', (e) => {
+function inScrubberZone(e) {
+    return isReplay() && wrap.style.display !== 'none' && e.clientY >= window.innerHeight - SCRUBBER_H;
+}
+
+window.addEventListener('mousedown', (e) => {
+    if (!inScrubberZone(e)) return;
     _dragActive   = true;
     _dragProgress = progressFromPointer(e);
-    e.preventDefault();
-});
+    e.stopPropagation(); // prevent game from handling this click
+}, true); // capture phase so we run before game handlers
 
 window.addEventListener('mousemove', (e) => {
     if (!_dragActive) return;
@@ -112,11 +119,13 @@ window.addEventListener('mouseup', (e) => {
 });
 
 // Touch support
-wrap.addEventListener('touchstart', (e) => {
+window.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    if (!inScrubberZone(t)) return;
     _dragActive   = true;
-    _dragProgress = progressFromPointer(e.touches[0]);
-    e.preventDefault();
-}, { passive: false });
+    _dragProgress = progressFromPointer(t);
+    e.stopPropagation();
+}, { passive: true, capture: true });
 
 window.addEventListener('touchmove', (e) => {
     if (!_dragActive) return;
@@ -150,12 +159,10 @@ function loop() {
     wrap.style.display = 'block';
     tickSeek();
 
-    const displayP = _dragProgress ?? replayProgress();
+    const displayP = _dragProgress ?? (_seekTarget !== null ? _seekTarget : replayProgress());
     const pct      = (displayP * 100).toFixed(2) + '%';
     fill.style.width = pct;
     knob.style.left  = pct;
 }
 
 requestAnimationFrame(loop);
-
-export default {};
