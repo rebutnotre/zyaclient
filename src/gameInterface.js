@@ -1,5 +1,5 @@
 const playerDataProperties = ["playerTerritories", "playerBalances", "rawPlayerNames"];
-const gameObjectProperties = ["playerId", "gIsTeamGame", "gGameType", "gHumans", "gLobbyMaxJoin", "gameState", "gIsSingleplayer"];
+const gameObjectProperties = ["playerId", "gIsTeamGame", "gHumans", "gLobbyMaxJoin", "gameState", "gIsSingleplayer"];
 
 export const getVar = varName => {
     if (playerDataProperties.includes(varName)) return window[dictionary.playerData]?.[dictionary[varName]];
@@ -8,7 +8,3 @@ export const getVar = varName => {
 };
 
 export const getUIGap = () => Math.floor(window[dictionary.uiSizes]?.[dictionary.gap] ?? 10);
-
-export const getGameTimeMs = () => {
-  try { return window[dictionary.sidebar]?.[dictionary.getTime]?.() ?? 0; } catch(e) { return 0; }
-};

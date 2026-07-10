@@ -1,4 +1,5 @@
-import { getVar, getGameTimeMs } from "./gameInterface.js";
+import { getVar } from "./gameInterface.js";
+const getGameTimeMs = () => { try { return window[dictionary.sidebar]?.[dictionary.getTime]?.() ?? 0; } catch(e) { return 0; } };
 import WindowManager from "./windowManager.js";
 import { getSettings } from "./settings.js";
 

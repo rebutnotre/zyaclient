@@ -20,8 +20,7 @@ export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
 			}
 		}
 		${insert(`if (__fx.settings.displayTickNumber)
-        zH.fillText(9 - eh, Math.floor(aAv * 2 + aBA), Math.floor(0.3 * this.j));`)}
-		${insert(`if (__fx.trainer) __fx.trainer._onGameTick(9 - eh);`)}`)
+      zH.fillText(9 - eh, Math.floor(aAv * 2 + aBA), Math.floor(0.3 * this.j));`)}`)
 
   // Add FX Client version info to the game version window
   modifyCode(`4, 1, new g(__L(), b.c + "<br>" + d.e.f("/changelog")
@@ -40,7 +39,7 @@ export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
 			return;
 		} ${insert(`if (!__fx.settings.hidePropagandaPopup && !__fx.customLobby.isActive())`)} a.g.h(5);`)
 
-  // Disable built-in Territorial.io error reporting (wrapped — pattern may break on game updates)
+  // Disable built-in Territorial.io error reporting (pattern may break on game updates)
   try {
     insertCode(
       `window.removeEventListener("error", err);

@@ -19,10 +19,9 @@ const request = https.get("https://territorial.io", function (response) {
 			if (err) throw err;
 			// Extract the game script from the html
 			// https://stackoverflow.com/a/14867897
-			const scriptStart = data.indexOf("<script>") + "<script>".length;
 			const scriptContent = data.substring(
-				scriptStart,
-				data.indexOf("</script>", scriptStart)
+				data.indexOf("<script>") + "<script>".length,
+				data.indexOf("</script>")
 			);
 			// Write the script to ./game/latest.js without any line breaks
 			fs.writeFileSync("./game/latest.js", scriptContent.replace(/\r?\n|\r/g, ""));
