@@ -90,11 +90,11 @@ const openings = {
   "ro-v3": {
     name: "RO V3",
     cycles: [
-      { attacks: [{ pct: 20.9, tick: 6, keys: "sssssssdd" }, { pct: 17.7, tick: 8, keys: "sa" }],                             expectedLand: 144,  expectedTroops: 799  },
-      { attacks: [{ pct: 21.6, tick: 8, keys: "wdd" }],                                                                        expectedLand: 264,  expectedTroops: 1466 },
-      { attacks: [{ pct: 26.9, tick: 6, keys: "ddd" }, { pct: 26.9, tick: 8 }],                                               expectedLand: 684,  expectedTroops: 2272 },
-      { attacks: [{ pct: 30.4, tick: 5, keys: "dd" }, { pct: 32.9, tick: 7, keys: "wwd" }, { pct: 32.9, tick: 9 }],          expectedLand: 1740, expectedTroops: 3105 },
-      { attacks: [{ pct: 34.7, tick: 5, keys: "d" }, { pct: 36.1, tick: 7, keys: "wewe" }, { pct: 36.1, tick: 9 }],          expectedLand: 3612, expectedTroops: 4304 },
+      { attacks: [{ pct: 20.9, tick: 7, keys: "sssssssdd" }, { pct: 17.7, tick: 9, keys: "sa"   }],                           expectedLand: 144,  expectedTroops: 799  },
+      { attacks: [{ pct: 21.6, tick: 8, keys: "wdd"       }],                                                                  expectedLand: 264,  expectedTroops: 1466 },
+      { attacks: [{ pct: 26.9, tick: 7, keys: "ddd"       }, { pct: 26.9, tick: 9                }],                          expectedLand: 684,  expectedTroops: 2272 },
+      { attacks: [{ pct: 30.4, tick: 5, keys: "dd"        }, { pct: 32.9, tick: 7, keys: "wwd"  }, { pct: 32.9, tick: 9 }],  expectedLand: 1740, expectedTroops: 3105 },
+      { attacks: [{ pct: 34.7, tick: 5, keys: "d"         }, { pct: 36.1, tick: 7, keys: "wewe" }, { pct: 36.1, tick: 9 }],  expectedLand: 3612, expectedTroops: 4304 },
     ]
   },
   "thigh-v2": {
@@ -132,6 +132,7 @@ const state = {
   cycleClicks: [],
   _pendingResultIdx: null,
   _lastTickTime: 0,
+  _retryCycle: null,
 };
 
 function resetCycleClicks() { state.cycleClicks = []; }
@@ -177,10 +178,10 @@ function buildClickFeedback(clicks, expectedTicks) {
       lines.push(`Tick <b>${actual}</b> ✓ correct timing`);
     } else if (actual > expected) {
       const diff = actual - expected;
-      lines.push(`Clicked tick <b>${actual}</b> — should be tick <b>${expected}</b> (${diff} tick${diff > 1 ? "s" : ""} too early)`);
+      lines.push(`Clicked tick <b>${actual}</b> — should be tick <b>${expected}</b> (${diff} tick${diff > 1 ? "s" : ""} too late)`);
     } else {
       const diff = expected - actual;
-      lines.push(`Clicked tick <b>${actual}</b> — should be tick <b>${expected}</b> (${diff} tick${diff > 1 ? "s" : ""} too late)`);
+      lines.push(`Clicked tick <b>${actual}</b> — should be tick <b>${expected}</b> (${diff} tick${diff > 1 ? "s" : ""} too early)`);
     }
   }
 
@@ -875,6 +876,15 @@ function showResult(cycleIdx, snapshot) {
     }
   }
 
+  // In retry mode, skip popup for cycles before the target cycle
+  if (state._retryCycle !== null && cycleIdx < state._retryCycle) {
+    state.paused = false;
+    resetCycleClicks();
+    if (cycleIdx + 1 === state._retryCycle) showBriefing(cycleIdx + 1);
+    return;
+  }
+  if (state._retryCycle !== null && cycleIdx === state._retryCycle) state._retryCycle = null;
+
   // In full opening mode, skip the popup for all but the last cycle.
   // Must reset state.paused — it was set true in the tick handler before the poll ran.
   if (state.fullOpening && !isLastCycle) {
@@ -963,9 +973,9 @@ function showResult(cycleIdx, snapshot) {
     if (clicksThisCycle.length === 0) {
       diag = "No attacks detected — did you forget to click?";
     } else if (missedOrWrong > 0 && landDiff > 0 && troopsDiff < 0) {
-      diag = "Late attack — more time passed, so more troops were spent taking extra land.";
+      diag = "Late attack — more troops were available, so more land was taken and fewer were retained.";
     } else if (missedOrWrong > 0 && landDiff < 0 && troopsDiff > 0) {
-      diag = "Early attack — fewer troops were ready, so less land was taken and more were retained.";
+      diag = "Early attack — fewer troops were available, so less land was taken and more were retained.";
     } else if (missedOrWrong > 0) {
       diag = "Timing was off — fix the click timing to hit the target.";
     } else if (extraClicks.length > 0 && landOk) {
@@ -1025,6 +1035,7 @@ function showResult(cycleIdx, snapshot) {
       WindowManager.closeWindow("trainerResult");
       __fx.restartGame?.();
     });
+    resultEl.appendChild(restartBtn);
 
     const continueBtn = document.createElement("button");
     continueBtn.textContent = "Continue anyway";
@@ -1037,7 +1048,7 @@ function showResult(cycleIdx, snapshot) {
         __fx.resumeGame();
       }
     });
-    resultEl.append(restartBtn, continueBtn);
+    resultEl.appendChild(continueBtn);
   } else {
     if (!isLastCycle) {
       const nextBtn = document.createElement("button");
@@ -1047,6 +1058,7 @@ function showResult(cycleIdx, snapshot) {
         showBriefing(cycleIdx + 1);
       });
       resultEl.appendChild(nextBtn);
+
     }
 
     const stopBtn = document.createElement("button");
@@ -1174,6 +1186,7 @@ armBtn.addEventListener("click", () => {
     const key = modeSelect.value;
     const isFull = cycleSelect.value === "full";
     const total = openings[key].cycles.length;
+    localStorage.setItem("fx_trainer_lastOpening", key);
     Object.assign(state, {
       active: true, waitingForNewGame: false, waitingForCycleStart: false,
       openingKey: key, maxCycle: total,
@@ -1297,10 +1310,13 @@ export function onGameInit() {
   const isMultiplayer = !getVar("gIsSingleplayer");
   if (isMultiplayer) { _mpGameActive = true; _mpGameMode = getMpMode(); _mpCrownTicks = 0; _mpTotalTicks = 0; _mpGameStartTime = Date.now(); clearTimeout(_mpLossTimer); }
   if (!state.active) return;
+  const stored = sessionStorage.getItem("_fx_retryCycle");
+  const retryCycle = stored !== null ? parseInt(stored) : state._retryCycle;
+  sessionStorage.removeItem("_fx_retryCycle");
   Object.assign(state, {
     waitingForNewGame: false, waitingForCycleStart: false,
     currentCycle: 1, lastTick: -1, paused: false, _pendingResultIdx: null,
-    cycleCount: 0, _timerArmed: false,
+    cycleCount: 0, _timerArmed: false, _retryCycle: retryCycle,
   });
   resetCycleClicks();
   WindowManager.closeWindow("trainerResult");
@@ -1314,12 +1330,15 @@ export function onGameInit() {
   }
 
   // In Learn Opening mode, pause immediately and show cycle 1 briefing
+  // Skip the pause if retrying a later cycle (overlay shows what to do)
   if (state.mode === 'opening' && !state.fullOpening) {
-    showBriefing(0);
+    if (retryCycle === null || retryCycle === 0) showBriefing(0);
   }
 }
 
 export function showSelector() {
+  const last = localStorage.getItem("fx_trainer_lastOpening");
+  if (last && openings[last]) modeSelect.value = last;
   refreshSelector();
   WindowManager.openWindow("trainerSelector");
 }

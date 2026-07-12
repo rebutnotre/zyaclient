@@ -2,6 +2,8 @@
 // Uses window.__fx_replayTick / __fx_replayTotal (exposed by patches.js)
 // and window.__fx_replaySpeedIdx (override read each tick in patches.js).
 
+import { getVar } from "./gameInterface.js";
+
 const SCRUBBER_H = 18;
 
 // ── DOM ──────────────────────────────────────────────────────────────────────
@@ -43,7 +45,7 @@ let _seekTarget   = null;   // 0-1 target after seek fires, null when idle
 let _restartDone  = false;  // guard: did we already restart for backwards seek?
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-function isReplay() { return !!window.aE?.hI; }
+function isReplay() { return !!window.aE?.hI && getVar("gameState") === 2; }
 
 function replayProgress() {
     const tick  = window.__fx_replayTick  ?? 0;
