@@ -87,6 +87,16 @@ const openings = {
       { attacks: [{ pct: 43.7, tick: 6, keys: "wwdd"     }], expectedLand: 2244, expectedTroops: 6246 },
     ]
   },
+  "ro-v3": {
+    name: "RO V3",
+    cycles: [
+      { attacks: [{ pct: 20.9, tick: 6, keys: "sssssssdd" }, { pct: 17.7, tick: 8, keys: "sa" }],                             expectedLand: 144,  expectedTroops: 799  },
+      { attacks: [{ pct: 21.6, tick: 8, keys: "wdd" }],                                                                        expectedLand: 264,  expectedTroops: 1466 },
+      { attacks: [{ pct: 26.9, tick: 6, keys: "ddd" }, { pct: 26.9, tick: 8 }],                                               expectedLand: 684,  expectedTroops: 2272 },
+      { attacks: [{ pct: 30.4, tick: 5, keys: "dd" }, { pct: 32.9, tick: 7, keys: "wwd" }, { pct: 32.9, tick: 9 }],          expectedLand: 1740, expectedTroops: 3105 },
+      { attacks: [{ pct: 34.7, tick: 5, keys: "d" }, { pct: 36.1, tick: 7, keys: "wewe" }, { pct: 36.1, tick: 9 }],          expectedLand: 3612, expectedTroops: 4304 },
+    ]
+  },
   "thigh-v2": {
     name: "Thigh V2",
     cycles: [
@@ -1246,10 +1256,10 @@ export function _onGameTick(tick) {
       state.waitingForCycleStart = true;
       renderOverlay(tick); return;
     }
-  } else if (tick === 9 && state._pendingResultIdx === null && state.currentCycle >= 1 && state.currentCycle <= state.maxCycle) {
+  } else if ((tick === 9 || (tick < state.lastTick && state.lastTick < 9)) && state._pendingResultIdx === null && state.currentCycle >= 1 && state.currentCycle <= state.maxCycle) {
     state._pendingResultIdx = state.currentCycle - 1;
     state.currentCycle++;
-  } else if (state._pendingResultIdx !== null && tick === 0) {
+  } else if (state._pendingResultIdx !== null && (tick === 0 || tick < state.lastTick)) {
     const cycleIdx = state._pendingResultIdx;
     state._pendingResultIdx = null;
     state.paused = true;
