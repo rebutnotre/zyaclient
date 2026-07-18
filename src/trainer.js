@@ -315,8 +315,7 @@ let _mpTotalTicks = 0;
 let _mpGameStartTime = 0;
 
 let _mapSeed = parseInt(localStorage.getItem("fx_trainer_seed") ?? "1", 10) || 1;
-let _timerInitTroops = 0;
-let _timerInitTroopsCaptured = false;
+let _timerTroopsDeployed = 0;
 
 function getMpMode() {
   const type = getVar("gGameType");
@@ -420,8 +419,7 @@ function timerEffScore(land, troops) {
 function saveTimerResult(land, troops) {
   const key = timerStorageKey();
   const data = JSON.parse(localStorage.getItem(key) ?? "[]");
-  const troopsLost = _timerInitTroops - troops;
-  data.push({ land, troops, troopsLost });
+  data.push({ land, troops, troopsDeployed: _timerTroopsDeployed });
   localStorage.setItem(key, JSON.stringify(data));
   addTotalTime(state.timerMs);
 }
@@ -437,9 +435,9 @@ function loadTimerStats(storageKey) {
   const avgLand   = Math.round(data.reduce((s, d) => s + d.land,   0) / data.length);
   const avgTroops = Math.round(data.reduce((s, d) => s + d.troops, 0) / data.length);
   const avgEff = avgLand > 0 ? avgTroops / avgLand : 0;
-  const runsWithLoss = data.filter(d => d.land > 0 && d.troopsLost != null);
-  const avgLossEff = runsWithLoss.length > 0
-    ? runsWithLoss.reduce((s, d) => s + d.troopsLost / d.land, 0) / runsWithLoss.length
+  const runsWithDeploy = data.filter(d => d.land > 0 && d.troopsDeployed != null);
+  const avgLossEff = runsWithDeploy.length > 0
+    ? runsWithDeploy.reduce((s, d) => s + d.troopsDeployed / d.land, 0) / runsWithDeploy.length
     : null;
   return { best, worst, bestEff, worstEff, avgLand, avgTroops, avgEff, avgLossEff, runs: data.length };
 }
@@ -544,7 +542,7 @@ function renderStatsTab(mainTab, subTab = "137", mpMode = "contest") {
           ["Efficiency (avg)", `${stats.avgEff.toFixed(1)} T/px`],
           ["Best efficiency",  `${fe(stats.bestEff)} T/px (${stats.bestEff.land}L)`],
           ["Worst efficiency", `${fe(stats.worstEff)} T/px (${stats.worstEff.land}L)`],
-          ...(stats.avgLossEff != null ? [["Loss eff (avg)", `${stats.avgLossEff.toFixed(2)} lost/px`]] : []),
+          ...(stats.avgLossEff != null ? [["Deploy eff (avg)", `${stats.avgLossEff.toFixed(1)} deployed/px`]] : []),
           ["Runs",    `${stats.runs}`],
         ].forEach(([label, val]) => {
           const tr = document.createElement("tr");
@@ -765,11 +763,11 @@ function showTimerResult(land, troops) {
   resultEl.appendChild(title);
 
   const statsP = document.createElement("p");
-  const lossEff = _timerInitTroops > 0 && land > 0
-    ? ((_timerInitTroops - troops) / land).toFixed(2)
+  const deployEff = land > 0 && _timerTroopsDeployed > 0
+    ? (_timerTroopsDeployed / land).toFixed(1)
     : null;
   statsP.innerHTML = `Land: <b>${land}</b><br>Troops: <b>${troops}</b>`
-    + (lossEff != null ? `<br>Loss eff: <b>${lossEff}</b> lost/px` : "");
+    + (deployEff != null ? `<br>Efficiency: <b>${deployEff}</b> deployed/px` : "");
   resultEl.appendChild(statsP);
 
   // Milestone
@@ -1262,11 +1260,6 @@ refreshSelector();
 
 export function _onGameTick(tick) {
   tickDelay.onTick();
-  if (state.active && state.mode === 'timer' && !_timerInitTroopsCaptured) {
-    const _pid = getVar("playerId");
-    const _t = getVar("playerBalances")?.[_pid];
-    if (_t > 0) { _timerInitTroops = _t; _timerInitTroopsCaptured = true; }
-  }
   state._lastTickTime = Date.now();
   if (_mpGameActive) {
     _mpTotalTicks++;
@@ -1362,8 +1355,7 @@ export function _onGameTick(tick) {
 
 export function onGameInit() {
   tickDelay.reset();
-  _timerInitTroops = 0;
-  _timerInitTroopsCaptured = false;
+  _timerTroopsDeployed = 0;
   const isMultiplayer = !getVar("gIsSingleplayer");
   if (isMultiplayer) { _mpGameActive = true; _mpGameMode = getMpMode(); _mpCrownTicks = 0; _mpTotalTicks = 0; _mpGameStartTime = Date.now(); clearTimeout(_mpLossTimer); }
   if (!state.active) return;
@@ -1412,6 +1404,12 @@ export function onCustomScenarioOpen() {
 export function onAttackSent() {
   if (!state.active || state.paused || state.waitingForNewGame || state.waitingForCycleStart) return;
   if (!getVar("gIsSingleplayer") || getVar("gameState") === 0) return;
+  if (state.mode === 'timer') {
+    const pid = getVar("playerId");
+    const troops = getVar("playerBalances")?.[pid] ?? 0;
+    const pct = window.__fx?.keybindFunctions?.getPercentage?.() ?? 0;
+    _timerTroopsDeployed += troops * pct;
+  }
   if (state.currentCycle < 1 || state.currentCycle > state.maxCycle) return;
   if (state.lastTick < 0) return;
   state.cycleClicks.push(state.lastTick);

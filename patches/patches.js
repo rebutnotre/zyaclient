@@ -143,6 +143,7 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
         replaceOne(/}(function \w+\((\w+)\){return!\(1<\2&&1===(?<attackPercentage>\w+)\|\|\(1<\2&&\2\*\3-\3<1\/1024\?\2=\(\3\+1\/1024\)\/\3:\2<1)/g,
             "} this.setAbsolutePercentage = function(newPercentage) { $<attackPercentage> = newPercentage; }; "
             + "__fx.keybindFunctions.setAbsolute = this.setAbsolutePercentage; "
+            + "__fx.keybindFunctions.getPercentage = () => $<attackPercentage>; "
             + `__fx.keybindFunctions.setRelative = (arg1) => ${attackBarObject}.${setRelative}(arg1); $1`);
         // insert keybind handling code into the keyDown handler function
         replaceOne(new RegExp(/(function \w+\((?<event>\w+)\){)([^}]+matched)/g.source.replace(/matched/g, escapeRegExp(match)), "g"),
