@@ -314,6 +314,10 @@ let _mpCrownTicks = 0;
 let _mpTotalTicks = 0;
 let _mpGameStartTime = 0;
 
+let _mapSeed = parseInt(localStorage.getItem("fx_trainer_seed") ?? "1", 10) || 1;
+let _timerInitTroops = 0;
+let _timerInitTroopsCaptured = false;
+
 function getMpMode() {
   const type = getVar("gGameType");
   if (getVar("gIsTeamGame")) {
@@ -416,7 +420,8 @@ function timerEffScore(land, troops) {
 function saveTimerResult(land, troops) {
   const key = timerStorageKey();
   const data = JSON.parse(localStorage.getItem(key) ?? "[]");
-  data.push({ land, troops });
+  const troopsLost = _timerInitTroops - troops;
+  data.push({ land, troops, troopsLost });
   localStorage.setItem(key, JSON.stringify(data));
   addTotalTime(state.timerMs);
 }
@@ -432,7 +437,11 @@ function loadTimerStats(storageKey) {
   const avgLand   = Math.round(data.reduce((s, d) => s + d.land,   0) / data.length);
   const avgTroops = Math.round(data.reduce((s, d) => s + d.troops, 0) / data.length);
   const avgEff = avgLand > 0 ? avgTroops / avgLand : 0;
-  return { best, worst, bestEff, worstEff, avgLand, avgTroops, avgEff, runs: data.length };
+  const runsWithLoss = data.filter(d => d.land > 0 && d.troopsLost != null);
+  const avgLossEff = runsWithLoss.length > 0
+    ? runsWithLoss.reduce((s, d) => s + d.troopsLost / d.land, 0) / runsWithLoss.length
+    : null;
+  return { best, worst, bestEff, worstEff, avgLand, avgTroops, avgEff, avgLossEff, runs: data.length };
 }
 
 // ─── Stats window ─────────────────────────────────────────────────────────────
@@ -535,6 +544,7 @@ function renderStatsTab(mainTab, subTab = "137", mpMode = "contest") {
           ["Efficiency (avg)", `${stats.avgEff.toFixed(1)} T/px`],
           ["Best efficiency",  `${fe(stats.bestEff)} T/px (${stats.bestEff.land}L)`],
           ["Worst efficiency", `${fe(stats.worstEff)} T/px (${stats.worstEff.land}L)`],
+          ...(stats.avgLossEff != null ? [["Loss eff (avg)", `${stats.avgLossEff.toFixed(2)} lost/px`]] : []),
           ["Runs",    `${stats.runs}`],
         ].forEach(([label, val]) => {
           const tr = document.createElement("tr");
@@ -755,7 +765,11 @@ function showTimerResult(land, troops) {
   resultEl.appendChild(title);
 
   const statsP = document.createElement("p");
-  statsP.innerHTML = `Land: <b>${land}</b><br>Troops: <b>${troops}</b>`;
+  const lossEff = _timerInitTroops > 0 && land > 0
+    ? ((_timerInitTroops - troops) / land).toFixed(2)
+    : null;
+  statsP.innerHTML = `Land: <b>${land}</b><br>Troops: <b>${troops}</b>`
+    + (lossEff != null ? `<br>Loss eff: <b>${lossEff}</b> lost/px` : "");
   resultEl.appendChild(statsP);
 
   // Milestone
@@ -1158,6 +1172,21 @@ speedLabel.appendChild(speedSelect);
 speedSelect.value = "0.5";
 
 // MP Delay toggle + value
+// Seed row
+const seedRow = document.createElement("div");
+seedRow.style.cssText = "display:flex;align-items:center;gap:8px";
+const seedDisplay = document.createElement("span");
+seedDisplay.textContent = `Seed: ${_mapSeed}`;
+const newSeedBtn = document.createElement("button");
+newSeedBtn.textContent = "New Seed";
+newSeedBtn.style.cssText = "font-size:.85em;padding:2px 8px";
+newSeedBtn.addEventListener("click", () => {
+  _mapSeed = Math.floor(Math.random() * 16383) + 1;
+  localStorage.setItem("fx_trainer_seed", String(_mapSeed));
+  seedDisplay.textContent = `Seed: ${_mapSeed}`;
+});
+seedRow.append(seedDisplay, newSeedBtn);
+
 const mpDelayLabel = document.createElement("label");
 mpDelayLabel.textContent = "MP Delay: ";
 const mpDelayCheck = document.createElement("input");
@@ -1176,7 +1205,7 @@ function refreshSelector() {
   cycleLabel.style.display    = isTimer ? "none" : "";
   timerLabel.style.display    = isTimer ? "" : "none";
   speedLabel.style.display    = "none";
-  mpDelayLabel.style.display  = isTimer ? "none" : "";
+  mpDelayLabel.style.display  = "";
 }
 typeSelect.addEventListener("change", refreshSelector);
 
@@ -1213,7 +1242,7 @@ armBtn.addEventListener("click", () => {
   tickDelay.setDelay(Math.max(1, parseInt(mpDelayInput.value) || 6));
   resetCycleClicks();
   renderOverlay(-1);
-  __fx.selectMap?.(0, 1);
+  __fx.selectMap?.(0, _mapSeed);
   WindowManager.closeWindow("trainerSelector");
 });
 
@@ -1224,6 +1253,7 @@ selectorEl.append(
   timerLabel, document.createElement("br"),
   speedLabel, document.createElement("br"),
   mpDelayLabel, document.createElement("br"),
+  seedRow, document.createElement("br"),
   noteP, armBtn
 );
 refreshSelector();
@@ -1232,6 +1262,11 @@ refreshSelector();
 
 export function _onGameTick(tick) {
   tickDelay.onTick();
+  if (state.active && state.mode === 'timer' && !_timerInitTroopsCaptured) {
+    const _pid = getVar("playerId");
+    const _t = getVar("playerBalances")?.[_pid];
+    if (_t > 0) { _timerInitTroops = _t; _timerInitTroopsCaptured = true; }
+  }
   state._lastTickTime = Date.now();
   if (_mpGameActive) {
     _mpTotalTicks++;
@@ -1327,6 +1362,8 @@ export function _onGameTick(tick) {
 
 export function onGameInit() {
   tickDelay.reset();
+  _timerInitTroops = 0;
+  _timerInitTroopsCaptured = false;
   const isMultiplayer = !getVar("gIsSingleplayer");
   if (isMultiplayer) { _mpGameActive = true; _mpGameMode = getMpMode(); _mpCrownTicks = 0; _mpTotalTicks = 0; _mpGameStartTime = Date.now(); clearTimeout(_mpLossTimer); }
   if (!state.active) return;
@@ -1367,7 +1404,7 @@ export function onCustomScenarioOpen() {
   if (!state.active) return;
   if (window.aD?.data) {
     window.aD.data.mapType = 0;
-    window.aD.data.mapProceduralIndex = 1;
+    window.aD.data.mapProceduralIndex = _mapSeed;
   }
   window.__fx_aTO?.();
 }

@@ -17,8 +17,7 @@ export function onTick() {
 // Returns false if delay is off (caller fires normally).
 export function queue(fn) {
   if (!_enabled) return false;
-  // Same formula as MpPractice: next multiple-of-7 boundary >= currentTick + delay
-  const fireTick = Math.ceil((_totalTick + _delay - 0.5) / 7) * 7;
+  const fireTick = _totalTick + _delay;
   _queue.push({ fireTick, fn });
   return true;
 }
