@@ -336,6 +336,11 @@ function stopExitWatcher() {
   if (_exitWatcher !== null) { clearInterval(_exitWatcher); _exitWatcher = null; }
 }
 
+function restartWithSeed() {
+  if (window.aD?.data) window.aD.data.mapProceduralIndex = _mapSeed;
+  __fx.restartGame?.();
+}
+
 function getMpMode() {
   const type = getVar("gGameType");
   if (getVar("gIsTeamGame")) {
@@ -837,7 +842,7 @@ function showTimerResult(land, troops) {
     state.paused = false;
     __fx.resumeGame();
     WindowManager.closeWindow("trainerResult");
-    __fx.restartGame?.();
+    restartWithSeed();
   });
 
   const doClose = () => {
@@ -977,7 +982,7 @@ function showResult(cycleIdx, snapshot) {
       state.paused = false;
       __fx.resumeGame();
       WindowManager.closeWindow("trainerResult");
-      __fx.restartGame?.();
+      restartWithSeed();
     });
     const stopBtn = document.createElement("button");
     stopBtn.textContent = "Close";
@@ -1090,7 +1095,7 @@ function showResult(cycleIdx, snapshot) {
       state.paused = false;
       __fx.resumeGame();
       WindowManager.closeWindow("trainerResult");
-      __fx.restartGame?.();
+      restartWithSeed();
     });
     resultEl.appendChild(restartBtn);
 
