@@ -12,6 +12,7 @@ import hoveringTooltip from "./hoveringTooltip.js";
 import { keybindFunctions, keybindHandler, mobileKeybinds } from "./keybinds.js";
 import customLobby from './customLobby.js';
 import trainer from './trainer.js';
+import tickDelay from './tickDelay.js';
 import './replayScrubber.js';
 import { displayChangelog } from './changelog.js';
 import { reportError } from './debugging.js';
@@ -87,6 +88,7 @@ __fx.clanFilter = clanFilter;
 __fx.wins = winCounter;
 __fx.customLobby = customLobby;
 __fx.trainer = trainer;
+__fx.tickDelay = tickDelay;
 
 __fx.selectMap = (type, idx) => {
   if (window.aE?.data) {

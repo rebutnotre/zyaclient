@@ -83,7 +83,7 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
 
     // Hook bB.hZ.hg — the troop-send function called for all attacks (mouse OR spacebar)
     replaceRawCode(`this.hg=function(il,jd){this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`,
-        `this.hg=function(il,jd){__fx.trainer?.onAttackSent?.();this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`);
+        `this.hg=function(il,jd){__fx.trainer?.onAttackSent?.();this.pT&&(this.pT=0,bm.pW.pX(182,il));const _fire=()=>{aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)};if(__fx.tickDelay?.queue(_fire))return;_fire();}`);
 
     // Expose spawn-phase replay progress
     replaceRawCode(`aCC=aD.hH?aB/aD.a5b:`,

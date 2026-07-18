@@ -2,6 +2,7 @@ import { getVar } from "./gameInterface.js";
 const getGameTimeMs = () => { try { return window[dictionary.sidebar]?.[dictionary.getTime]?.() ?? 0; } catch(e) { return 0; } };
 import WindowManager from "./windowManager.js";
 import { getSettings } from "./settings.js";
+import tickDelay from "./tickDelay.js";
 
 // Each cycle has an `attacks` array: [{ pct, tick, keys? }, ...]
 // pct = attack percentage; tick = which tick to click; keys = keybind string (optional)
@@ -1156,12 +1157,26 @@ speedLabel.appendChild(speedSelect);
 });
 speedSelect.value = "0.5";
 
+// MP Delay toggle + value
+const mpDelayLabel = document.createElement("label");
+mpDelayLabel.textContent = "MP Delay: ";
+const mpDelayCheck = document.createElement("input");
+mpDelayCheck.type = "checkbox";
+mpDelayLabel.prepend(mpDelayCheck);
+const mpDelayInput = document.createElement("input");
+mpDelayInput.type = "number";
+mpDelayInput.min = "1"; mpDelayInput.max = "30"; mpDelayInput.value = "6";
+mpDelayInput.style.cssText = "width:48px;margin-left:6px";
+mpDelayLabel.appendChild(document.createTextNode(" ticks"));
+mpDelayLabel.appendChild(mpDelayInput);
+
 function refreshSelector() {
   const isTimer = typeSelect.value === "timer";
-  modeLabel.style.display  = isTimer ? "none" : "";
-  cycleLabel.style.display = isTimer ? "none" : "";
-  timerLabel.style.display = isTimer ? "" : "none";
-  speedLabel.style.display = "none";
+  modeLabel.style.display     = isTimer ? "none" : "";
+  cycleLabel.style.display    = isTimer ? "none" : "";
+  timerLabel.style.display    = isTimer ? "" : "none";
+  speedLabel.style.display    = "none";
+  mpDelayLabel.style.display  = isTimer ? "none" : "";
 }
 typeSelect.addEventListener("change", refreshSelector);
 
@@ -1194,6 +1209,8 @@ armBtn.addEventListener("click", () => {
       mode: 'opening', cycleCount: 0,
     });
   }
+  tickDelay.setEnabled(mpDelayCheck.checked);
+  tickDelay.setDelay(Math.max(1, parseInt(mpDelayInput.value) || 6));
   resetCycleClicks();
   renderOverlay(-1);
   __fx.selectMap?.(0, 1);
@@ -1206,6 +1223,7 @@ selectorEl.append(
   cycleLabel, document.createElement("br"),
   timerLabel, document.createElement("br"),
   speedLabel, document.createElement("br"),
+  mpDelayLabel, document.createElement("br"),
   noteP, armBtn
 );
 refreshSelector();
@@ -1213,6 +1231,7 @@ refreshSelector();
 // ─── Game hooks ───────────────────────────────────────────────────────────────
 
 export function _onGameTick(tick) {
+  tickDelay.onTick();
   state._lastTickTime = Date.now();
   if (_mpGameActive) {
     _mpTotalTicks++;
@@ -1307,6 +1326,7 @@ export function _onGameTick(tick) {
 }
 
 export function onGameInit() {
+  tickDelay.reset();
   const isMultiplayer = !getVar("gIsSingleplayer");
   if (isMultiplayer) { _mpGameActive = true; _mpGameMode = getMpMode(); _mpCrownTicks = 0; _mpTotalTicks = 0; _mpGameStartTime = Date.now(); clearTimeout(_mpLossTimer); }
   if (!state.active) return;

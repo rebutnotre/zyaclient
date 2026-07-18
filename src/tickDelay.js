@@ -1,7 +1,32 @@
-let lastTick = -1;
+let _totalTick = 0;
+let _enabled = false;
+let _delay = 6;
+const _queue = []; // { fireTick, fn }[]
 
-export function onTick(tick) {
-  lastTick = tick;
+export function onTick() {
+  _totalTick++;
+  for (let i = _queue.length - 1; i >= 0; i--) {
+    if (_totalTick >= _queue[i].fireTick) {
+      _queue[i].fn();
+      _queue.splice(i, 1);
+    }
+  }
 }
 
-export default { onTick };
+// Returns true if the attack was queued (caller should NOT fire immediately).
+// Returns false if delay is off (caller fires normally).
+export function queue(fn) {
+  if (!_enabled) return false;
+  // Same formula as MpPractice: next multiple-of-7 boundary >= currentTick + delay
+  const fireTick = Math.ceil((_totalTick + _delay - 0.5) / 7) * 7;
+  _queue.push({ fireTick, fn });
+  return true;
+}
+
+export function setEnabled(v) { _enabled = v; }
+export function setDelay(v)   { _delay = v; }
+export function getEnabled()  { return _enabled; }
+export function getDelay()    { return _delay; }
+export function reset()       { _queue.length = 0; _totalTick = 0; }
+
+export default { onTick, queue, setEnabled, setDelay, getEnabled, getDelay, reset };
