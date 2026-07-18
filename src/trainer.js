@@ -317,6 +317,24 @@ let _mpGameStartTime = 0;
 
 let _mapSeed = parseInt(localStorage.getItem("fx_trainer_seed") ?? "1", 10) || 1;
 let _timerTroopsDeployed = 0;
+let _exitWatcher = null;
+
+function startExitWatcher() {
+  stopExitWatcher();
+  _exitWatcher = setInterval(() => {
+    if (!state.active || state.mode !== 'timer') { stopExitWatcher(); return; }
+    if (getVar("gameState") === 0) {
+      stopExitWatcher();
+      state.active = false;
+      overlay.style.display = "none";
+      showSeedPrompt();
+    }
+  }, 100);
+}
+
+function stopExitWatcher() {
+  if (_exitWatcher !== null) { clearInterval(_exitWatcher); _exitWatcher = null; }
+}
 
 function getMpMode() {
   const type = getVar("gGameType");
@@ -777,6 +795,7 @@ function showTimerResult(land, troops) {
     : -Infinity;
   const newPB = allPrevRuns.length > 0 && score > prevBestScore;
 
+  stopExitWatcher();
   saveTimerResult(land, troops);
 
   resultEl.innerHTML = "";
@@ -1234,6 +1253,7 @@ armBtn.addEventListener("click", () => {
       timerMs: key === "137" ? 97000 : key === "112" ? 72000 : key === "050" ? 50000 : 33000,
       cycleCount: 0, _timerArmed: false,
     });
+    startExitWatcher();
   } else {
     const key = modeSelect.value;
     const isFull = cycleSelect.value === "full";
@@ -1277,13 +1297,6 @@ export function _onGameTick(tick) {
   if (!state.active) return;
 
   if (!getVar("gIsSingleplayer") || getVar("gameState") === 0) {
-    if (state.mode === 'timer' && !state._exitHandled) {
-      state._exitHandled = true;
-      state.active = false;
-      overlay.style.display = "none";
-      showSeedPrompt();
-      return;
-    }
     state.paused = false;
     __fx.resumeGame();
     WindowManager.closeWindow("trainerResult");
@@ -1372,7 +1385,6 @@ export function _onGameTick(tick) {
 export function onGameInit() {
   tickDelay.reset();
   _timerTroopsDeployed = 0;
-  state._exitHandled = false;
   const isMultiplayer = !getVar("gIsSingleplayer");
   if (isMultiplayer) { _mpGameActive = true; _mpGameMode = getMpMode(); _mpCrownTicks = 0; _mpTotalTicks = 0; _mpGameStartTime = Date.now(); clearTimeout(_mpLossTimer); }
   if (!state.active) return;
