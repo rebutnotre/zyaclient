@@ -209,16 +209,6 @@ Object.assign(overlay.style, {
 });
 document.body.appendChild(overlay);
 
-const timerStopBtn = document.createElement("button");
-timerStopBtn.textContent = "■ Stop";
-timerStopBtn.style.cssText = "pointer-events:auto;margin-top:6px;width:100%;font-size:.85em;opacity:.7";
-timerStopBtn.addEventListener("click", () => {
-  state.active = false;
-  delete window.__fx_aCY;
-  __fx.resumeGame();
-  overlay.style.display = "none";
-  showSeedPrompt();
-});
 
 function formatMs(ms) {
   const totalSec = Math.floor(ms / 1000);
@@ -240,7 +230,6 @@ function renderOverlay(tick) {
       `<b>${formatMs(state.timerMs)} Timer</b>${SEP}` +
       `Time: <b>${formatMs(elapsed)}</b><br>` +
       `Remaining: <b>${formatMs(remaining)}</b>`;
-    overlay.appendChild(timerStopBtn);
     return;
   }
 
@@ -1288,6 +1277,13 @@ export function _onGameTick(tick) {
   if (!state.active) return;
 
   if (!getVar("gIsSingleplayer") || getVar("gameState") === 0) {
+    if (state.mode === 'timer' && !state._exitHandled) {
+      state._exitHandled = true;
+      state.active = false;
+      overlay.style.display = "none";
+      showSeedPrompt();
+      return;
+    }
     state.paused = false;
     __fx.resumeGame();
     WindowManager.closeWindow("trainerResult");
@@ -1376,6 +1372,7 @@ export function _onGameTick(tick) {
 export function onGameInit() {
   tickDelay.reset();
   _timerTroopsDeployed = 0;
+  state._exitHandled = false;
   const isMultiplayer = !getVar("gIsSingleplayer");
   if (isMultiplayer) { _mpGameActive = true; _mpGameMode = getMpMode(); _mpCrownTicks = 0; _mpTotalTicks = 0; _mpGameStartTime = Date.now(); clearTimeout(_mpLossTimer); }
   if (!state.active) return;
