@@ -798,14 +798,36 @@ function showTimerResult(land, troops) {
     __fx.restartGame?.();
   });
 
-  const stopBtn = document.createElement("button");
-  stopBtn.textContent = "Close";
-  stopBtn.addEventListener("click", () => {
+  const doClose = () => {
     state.active = false;
     delete window.__fx_aCY;
     __fx.resumeGame();
     overlay.style.display = "none";
     WindowManager.closeWindow("trainerResult");
+  };
+
+  const stopBtn = document.createElement("button");
+  stopBtn.textContent = "Close";
+  stopBtn.addEventListener("click", () => {
+    stopBtn.style.display = "none";
+    restartBtn.style.display = "none";
+    const seedPrompt = document.createElement("div");
+    seedPrompt.style.cssText = "margin-top:8px";
+    const seedLabel = document.createElement("p");
+    seedLabel.style.cssText = "margin:0 0 6px;font-size:.9em;opacity:.8";
+    seedLabel.textContent = `Current seed: ${_mapSeed}. New seed for next run?`;
+    const newSeedYes = document.createElement("button");
+    newSeedYes.textContent = "New Seed";
+    newSeedYes.addEventListener("click", () => {
+      _mapSeed = Math.floor(Math.random() * 16383) + 1;
+      localStorage.setItem("fx_trainer_seed", String(_mapSeed));
+      doClose();
+    });
+    const newSeedNo = document.createElement("button");
+    newSeedNo.textContent = "Keep Seed";
+    newSeedNo.addEventListener("click", doClose);
+    seedPrompt.append(seedLabel, newSeedYes, newSeedNo);
+    resultEl.appendChild(seedPrompt);
   });
 
   resultEl.append(restartBtn, stopBtn);
@@ -1170,21 +1192,6 @@ speedLabel.appendChild(speedSelect);
 speedSelect.value = "0.5";
 
 // MP Delay toggle + value
-// Seed row
-const seedRow = document.createElement("div");
-seedRow.style.cssText = "display:flex;align-items:center;gap:8px";
-const seedDisplay = document.createElement("span");
-seedDisplay.textContent = `Seed: ${_mapSeed}`;
-const newSeedBtn = document.createElement("button");
-newSeedBtn.textContent = "New Seed";
-newSeedBtn.style.cssText = "font-size:.85em;padding:2px 8px";
-newSeedBtn.addEventListener("click", () => {
-  _mapSeed = Math.floor(Math.random() * 16383) + 1;
-  localStorage.setItem("fx_trainer_seed", String(_mapSeed));
-  seedDisplay.textContent = `Seed: ${_mapSeed}`;
-});
-seedRow.append(seedDisplay, newSeedBtn);
-
 const mpDelayLabel = document.createElement("label");
 mpDelayLabel.textContent = "MP Delay: ";
 const mpDelayCheck = document.createElement("input");
@@ -1251,7 +1258,6 @@ selectorEl.append(
   timerLabel, document.createElement("br"),
   speedLabel, document.createElement("br"),
   mpDelayLabel, document.createElement("br"),
-  seedRow, document.createElement("br"),
   noteP, armBtn
 );
 refreshSelector();
