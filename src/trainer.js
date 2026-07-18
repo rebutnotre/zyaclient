@@ -209,6 +209,17 @@ Object.assign(overlay.style, {
 });
 document.body.appendChild(overlay);
 
+const timerStopBtn = document.createElement("button");
+timerStopBtn.textContent = "■ Stop";
+timerStopBtn.style.cssText = "pointer-events:auto;margin-top:6px;width:100%;font-size:.85em;opacity:.7";
+timerStopBtn.addEventListener("click", () => {
+  state.active = false;
+  delete window.__fx_aCY;
+  __fx.resumeGame();
+  overlay.style.display = "none";
+  showSeedPrompt();
+});
+
 function formatMs(ms) {
   const totalSec = Math.floor(ms / 1000);
   const m = Math.floor(totalSec / 60);
@@ -229,6 +240,7 @@ function renderOverlay(tick) {
       `<b>${formatMs(state.timerMs)} Timer</b>${SEP}` +
       `Time: <b>${formatMs(elapsed)}</b><br>` +
       `Remaining: <b>${formatMs(remaining)}</b>`;
+    overlay.appendChild(timerStopBtn);
     return;
   }
 
@@ -743,6 +755,28 @@ export function showStats() {
   WindowManager.openWindow("trainerStats");
 }
 
+// ─── Seed prompt ──────────────────────────────────────────────────────────────
+
+function showSeedPrompt(onDone) {
+  resultEl.innerHTML = "";
+  const p = document.createElement("p");
+  p.style.cssText = "margin:0 0 8px";
+  p.textContent = `Seed: ${_mapSeed}. Generate a new one for next run?`;
+  const yesBtn = document.createElement("button");
+  yesBtn.textContent = "New Seed";
+  yesBtn.addEventListener("click", () => {
+    _mapSeed = Math.floor(Math.random() * 16383) + 1;
+    localStorage.setItem("fx_trainer_seed", String(_mapSeed));
+    WindowManager.closeWindow("trainerResult");
+    onDone?.();
+  });
+  const noBtn = document.createElement("button");
+  noBtn.textContent = "Keep Seed";
+  noBtn.addEventListener("click", () => { WindowManager.closeWindow("trainerResult"); onDone?.(); });
+  resultEl.append(p, yesBtn, noBtn);
+  WindowManager.openWindow("trainerResult");
+}
+
 // ─── Timer result ─────────────────────────────────────────────────────────────
 
 function showTimerResult(land, troops) {
@@ -808,27 +842,7 @@ function showTimerResult(land, troops) {
 
   const stopBtn = document.createElement("button");
   stopBtn.textContent = "Close";
-  stopBtn.addEventListener("click", () => {
-    stopBtn.style.display = "none";
-    restartBtn.style.display = "none";
-    const seedPrompt = document.createElement("div");
-    seedPrompt.style.cssText = "margin-top:8px";
-    const seedLabel = document.createElement("p");
-    seedLabel.style.cssText = "margin:0 0 6px;font-size:.9em;opacity:.8";
-    seedLabel.textContent = `Current seed: ${_mapSeed}. New seed for next run?`;
-    const newSeedYes = document.createElement("button");
-    newSeedYes.textContent = "New Seed";
-    newSeedYes.addEventListener("click", () => {
-      _mapSeed = Math.floor(Math.random() * 16383) + 1;
-      localStorage.setItem("fx_trainer_seed", String(_mapSeed));
-      doClose();
-    });
-    const newSeedNo = document.createElement("button");
-    newSeedNo.textContent = "Keep Seed";
-    newSeedNo.addEventListener("click", doClose);
-    seedPrompt.append(seedLabel, newSeedYes, newSeedNo);
-    resultEl.appendChild(seedPrompt);
-  });
+  stopBtn.addEventListener("click", () => showSeedPrompt(doClose));
 
   resultEl.append(restartBtn, stopBtn);
 
