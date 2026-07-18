@@ -337,7 +337,9 @@ function stopExitWatcher() {
 }
 
 function restartWithSeed() {
-  if (window.aD?.data) window.aD.data.mapProceduralIndex = _mapSeed;
+  for (const obj of [window.aD?.data, window.aE?.data]) {
+    if (obj) { obj.mapType = 0; obj.mapProceduralIndex = _mapSeed; }
+  }
   __fx.restartGame?.();
 }
 
