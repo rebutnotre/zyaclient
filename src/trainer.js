@@ -317,6 +317,7 @@ let _mpGameStartTime = 0;
 
 let _mapSeed = parseInt(localStorage.getItem("fx_trainer_seed") ?? "1", 10) || 1;
 let _timerTroopsDeployed = 0;
+let _applyMapOnNextOpen = false;
 let _exitWatcher = null;
 
 function startExitWatcher() {
@@ -781,12 +782,17 @@ function showSeedPrompt(onDone) {
   yesBtn.addEventListener("click", () => {
     _mapSeed = Math.floor(Math.random() * 16383) + 1;
     localStorage.setItem("fx_trainer_seed", String(_mapSeed));
+    _applyMapOnNextOpen = true;
     WindowManager.closeWindow("trainerResult");
     onDone?.();
   });
   const noBtn = document.createElement("button");
   noBtn.textContent = "Keep Seed";
-  noBtn.addEventListener("click", () => { WindowManager.closeWindow("trainerResult"); onDone?.(); });
+  noBtn.addEventListener("click", () => {
+    _applyMapOnNextOpen = true;
+    WindowManager.closeWindow("trainerResult");
+    onDone?.();
+  });
   resultEl.append(p, yesBtn, noBtn);
   WindowManager.openWindow("trainerResult");
 }
@@ -1429,7 +1435,8 @@ export function showSelector() {
 }
 
 export function onCustomScenarioOpen() {
-  if (!state.active) return;
+  if (!state.active && !_applyMapOnNextOpen) return;
+  _applyMapOnNextOpen = false;
   if (window.aD?.data) {
     window.aD.data.mapType = 0;
     window.aD.data.mapProceduralIndex = _mapSeed;
