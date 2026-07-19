@@ -355,7 +355,7 @@ function stopExitWatcher() {
 
 function restartWithSeed() {
   for (const obj of [window.aD?.data, window.aE?.data]) {
-    if (obj) { obj.mapType = 0; obj.mapSeed = _mapSeed; obj.spawningSeed = _mapSeed; }
+    if (obj) { obj.spawningSeed = _mapSeed; }
   }
   __fx.restartGame?.();
 }
@@ -1454,8 +1454,6 @@ export function onCustomScenarioOpen() {
   if (!state.active && !_applyMapOnNextOpen) return;
   _applyMapOnNextOpen = false;
   if (window.aD?.data) {
-    window.aD.data.mapType = 0;
-    window.aD.data.mapSeed = _mapSeed;
     window.aD.data.spawningSeed = _mapSeed;
   }
   window.__fx_aTO?.();
