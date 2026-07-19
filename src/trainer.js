@@ -209,6 +209,15 @@ Object.assign(overlay.style, {
 });
 document.body.appendChild(overlay);
 
+const spawnSeedBtn = document.createElement("button");
+spawnSeedBtn.textContent = "New Seed";
+spawnSeedBtn.style.cssText = "display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:20;padding:6px 18px;font-size:1em;background:rgba(0,0,0,0.85);color:#fff;border:2px solid #fff;border-radius:6px;cursor:pointer";
+spawnSeedBtn.addEventListener("click", () => {
+  _mapSeed = Math.floor(Math.random() * 16383) + 1;
+  localStorage.setItem("fx_trainer_seed", String(_mapSeed));
+  restartWithSeed();
+});
+document.body.appendChild(spawnSeedBtn);
 
 function formatMs(ms) {
   const totalSec = Math.floor(ms / 1000);
@@ -220,10 +229,13 @@ function formatMs(ms) {
 const NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨"];
 
 function renderOverlay(tick) {
-  if (!state.active) { overlay.style.display = "none"; return; }
+  if (!state.active) { overlay.style.display = "none"; spawnSeedBtn.style.display = "none"; return; }
   overlay.style.display = "block";
 
   if (state.mode === 'timer') {
+    const inSpawnSelect = window.aE?.hX === true;
+    spawnSeedBtn.style.display = inSpawnSelect ? "block" : "none";
+    if (inSpawnSelect) { overlay.style.display = "none"; return; }
     const elapsed = getGameTimeMs();
     const remaining = Math.max(0, state.timerMs - elapsed);
     overlay.innerHTML =
@@ -319,17 +331,21 @@ let _mapSeed = parseInt(localStorage.getItem("fx_trainer_seed") ?? "1", 10) || 1
 let _timerTroopsDeployed = 0;
 let _applyMapOnNextOpen = false;
 let _exitWatcher = null;
+let _exitWatcherSawGame = false;
 
 function startExitWatcher() {
   stopExitWatcher();
+  _exitWatcherSawGame = false;
   _exitWatcher = setInterval(() => {
     if (!state.active || state.mode !== 'timer') { stopExitWatcher(); return; }
-    if (getVar("gameState") === 0) {
-      stopExitWatcher();
-      state.active = false;
-      overlay.style.display = "none";
-      showSeedPrompt();
-    }
+    const gs = getVar("gameState");
+    if (gs !== 0) { _exitWatcherSawGame = true; return; }
+    if (!_exitWatcherSawGame) return;
+    stopExitWatcher();
+    state.active = false;
+    overlay.style.display = "none";
+    spawnSeedBtn.style.display = "none";
+    showSeedPrompt();
   }, 100);
 }
 
@@ -339,7 +355,7 @@ function stopExitWatcher() {
 
 function restartWithSeed() {
   for (const obj of [window.aD?.data, window.aE?.data]) {
-    if (obj) { obj.mapType = 0; obj.mapProceduralIndex = _mapSeed; }
+    if (obj) { obj.mapType = 0; obj.mapSeed = _mapSeed; obj.spawningSeed = _mapSeed; }
   }
   __fx.restartGame?.();
 }
@@ -1439,7 +1455,8 @@ export function onCustomScenarioOpen() {
   _applyMapOnNextOpen = false;
   if (window.aD?.data) {
     window.aD.data.mapType = 0;
-    window.aD.data.mapProceduralIndex = _mapSeed;
+    window.aD.data.mapSeed = _mapSeed;
+    window.aD.data.spawningSeed = _mapSeed;
   }
   window.__fx_aTO?.();
 }
