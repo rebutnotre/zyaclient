@@ -1117,7 +1117,12 @@ function pM() {
 		aE.ko ? bB.pO.ha(aE.et, ev) : b1.pU.pV(ev)
 	}, this.hg = function(il, jd) {
 		__fx.trainer?.onAttackSent?.();
-		this.pT && (this.pT = 0, bm.pW.pX(182, il)), aE.ko ? bB.pO.hg(aE.et, il, jd) : b1.pU.pY(il, jd)
+		this.pT && (this.pT = 0, bm.pW.pX(182, il));
+		const _fire = () => {
+			aE.ko ? bB.pO.hg(aE.et, il, jd) : b1.pU.pY(il, jd)
+		};
+		if (__fx.tickDelay?.queue(_fire)) return;
+		_fire();
 	}, this.pZ = function(il, pa) {
 		aE.ko ? bB.pO.pb(aE.et, il, pa) : b1.pU.pc(il, pa)
 	}, this.hl = function(il, ev) {
@@ -4360,6 +4365,7 @@ function cL() {
 		il = newPercentage;
 	};
 	__fx.keybindFunctions.setAbsolute = this.setAbsolutePercentage;
+	__fx.keybindFunctions.getPercentage = () => il;
 	__fx.keybindFunctions.setRelative = (arg1) => aS.a3D(arg1);
 
 	function a9g(a3Z) {
