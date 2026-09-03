@@ -21,6 +21,7 @@ import replay from './replay.js';
 import lobbyReminders from './lobbyReminders.js';
 import pingFilter from './pingFilter.js';
 import nameFilter from './nameFilter.js';
+import followedAccounts from './followedAccounts.js';
 
 window.__fx = window.__fx || {};
 const __fx = window.__fx;
@@ -99,6 +100,7 @@ __fx.replay = replay;
 __fx.lobbyReminders = lobbyReminders;
 __fx.pingFilter = pingFilter;
 __fx.nameFilter = nameFilter;
+__fx.followedAccounts = followedAccounts;
 
 __fx.selectMap = (type, idx) => {
   if (window.aE?.data) {

@@ -1,7 +1,7 @@
 import { definePatch, insert } from "../modUtils.js"
 import { styleText } from "node:util";
 
-export default definePatch(({ insertCode, modifyCode, replaceCode, replace }) => {
+export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
 
   // Display tick number near the moving bars in the balance box
   modifyCode(`zH.fillStyle = eh === 9 ? bD.pD : bD.o5;
@@ -52,10 +52,14 @@ export default definePatch(({ insertCode, modifyCode, replaceCode, replace }) =>
     console.warn("Warning: failed to patch error reporter (game may have updated)")
   }
 
-  // Invalid hostname detection avoidance (handles both x>=0 and 0<=x forms)
-  replace(/this\.(\w+)=\w+\.indexOf\("territorial\.io"\)>=0/g, 'this.$1=true')
-  replace(/this\.(\w+)=0<=\w+\.indexOf\("territorial\.io"\)/g, 'this.$1=true')
+  // use textContent so that usernames dont get parsed that contain html code
+  replaceCode(
+    `cell.style.width = data.columnWidths[columnIndex] + "%";
+    cell.innerHTML = rows[rowIndex][columnIndex].content;`,
 
+    `cell.style.width = data.columnWidths[columnIndex] + "%";
+    cell.textContent = rows[rowIndex][columnIndex].content;`
+  )
 
   // for the custom lobby version
   try {

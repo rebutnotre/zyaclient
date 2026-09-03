@@ -39,7 +39,14 @@ function closeWindow(windowName) {
   windows[windowName].element.style.display = "none";
   if (windows[windowName].onClose !== undefined) windows[windowName].onClose();
 }
+function isWindowOpen(windowName) {
+  return windows[windowName].isOpen === true;
+}
+function setWindowVisible(windowName, visible) {
+  windows[windowName].element.style.display = visible ? null : "none";
+}
 function closeAll() {
+  if (Object.values(windows).some((windowObj) => windowObj.modal === true && windowObj.isOpen === true)) return;
   Object.values(windows).forEach(function (windowObj) {
     if (windowObj.closable !== false) closeWindow(windowObj.name);
   });
@@ -66,4 +73,4 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeAll();
 });
 
-export default { create, add, openWindow, closeWindow, closeAll };
+export default { create, add, openWindow, closeWindow, closeAll, isWindowOpen, setWindowVisible };

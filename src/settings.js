@@ -5,6 +5,7 @@ import versionData from '../version.json';
 import { displayChangelog } from './changelog.js';
 import replayHistory from './replayHistory.js'
 import { LobbyReminderRulesInput } from './lobbyReminderRulesInput.js';
+import { FollowedAccountNicknames } from './followedAccounts.js';
 
 window.__fx = window.__fx || {};
 const __fx = window.__fx;
@@ -42,7 +43,8 @@ var settings = {
   mutePingClan: false,
   mutePingLanguage: false,
   mutePingDirect: false,
-  hideInappropriateNames: false
+  hideInappropriateNames: false,
+  followedAccountNicknames: {}
 };
 __fx.settings = settings;
 const discontinuedSettings = ["hideAllLinks", "fontName"];
@@ -537,6 +539,7 @@ const settingsManager = new (function () {
       label: "Inappropriate name hider",
       note: "Replaces player names that contain common offensive or inappropriate words with \"Hidden Name\".",
     },
+    FollowedAccountNicknames,
     ReplayHistoryList,
     function Footer(container) {
       const versionInfo = document.createElement("p");
