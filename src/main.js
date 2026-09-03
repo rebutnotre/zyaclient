@@ -16,6 +16,11 @@ import tickDelay from './tickDelay.js';
 import './replayScrubber.js';
 import { displayChangelog } from './changelog.js';
 import { reportError } from './debugging.js';
+import replayHistory from './replayHistory.js';
+import replay from './replay.js';
+import lobbyReminders from './lobbyReminders.js';
+import pingFilter from './pingFilter.js';
+import nameFilter from './nameFilter.js';
 
 window.__fx = window.__fx || {};
 const __fx = window.__fx;
@@ -89,6 +94,11 @@ __fx.wins = winCounter;
 __fx.customLobby = customLobby;
 __fx.trainer = trainer;
 __fx.tickDelay = tickDelay;
+__fx.replayHistory = replayHistory;
+__fx.replay = replay;
+__fx.lobbyReminders = lobbyReminders;
+__fx.pingFilter = pingFilter;
+__fx.nameFilter = nameFilter;
 
 __fx.selectMap = (type, idx) => {
   if (window.aE?.data) {

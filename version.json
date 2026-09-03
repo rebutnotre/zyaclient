@@ -1,8 +1,8 @@
 {
-    "version": "0.6.20",
-    "lastUpdated": "May 19",
+    "version": "0.6.27",
+    "lastUpdated": "August 7",
     "changes": [
-        "The current tick number is now shown in the top bar near the balance. This can be disabled in the settings."
+        "Fix bugs from the previous update (Merged PR #28 by QZxV4)"
     ],
     "isSignificant": true
 }

@@ -1345,19 +1345,10 @@ export function _onGameTick(tick) {
     if (t >= state.timerMs) {
       state.paused = true;
       const pid = getVar("playerId");
-      let prevTroops = getVar("playerBalances")?.[pid] ?? 0;
-      let prevLand   = getVar("playerTerritories")?.[pid] ?? 0;
-      let stableCount = 0, polls = 0;
-      const poll = () => {
-        const troops = getVar("playerBalances")?.[pid] ?? 0;
-        const land   = getVar("playerTerritories")?.[pid] ?? 0;
-        if (troops === prevTroops && land === prevLand) stableCount++;
-        else { prevTroops = troops; prevLand = land; stableCount = 0; }
-        polls++;
-        if (stableCount >= 6 || polls >= 40) showTimerResult(prevLand, prevTroops);
-        else setTimeout(poll, 50);
-      };
-      setTimeout(poll, 50);
+      showTimerResult(
+        getVar("playerTerritories")?.[pid] ?? 0,
+        getVar("playerBalances")?.[pid] ?? 0
+      );
     }
     return;
   }

@@ -150,6 +150,10 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
             "$1 if (__fx.keybindHandler($<event>.key)) return; $3");
     }
 
+    // Custom starting attack percentage
+    replaceRawCode(`il=(bm.eU.data[182].value+1)/1024`,
+        `il = __fx.settings.startingPercentageEnabled ? (__fx.settings.startingPercentage || 50) / 100 : (bm.eU.data[182].value+1)/1024`)
+
     // Set the default font to Trebuchet MS
     replace(/sans-serif"/g, 'Trebuchet MS"');
 
@@ -172,11 +176,9 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
         `$1 __fx.donationsTracker.logDonation($2, $3, $5[0], ${dict.sidebar}.${dict.getTime}()); $4`)
 
     // Display donations for a player when clicking on them in the leaderboard
-    // and skip handling clicks when clicking on an empty space (see the isEmptySpace
-    // variable in the modified leaderboard click handler from the leaderboard filter)
-    // match , 0 !== dG[x]) && fq.hB(x, 800, false, 0),
-    replaceOne(/(0!==\w+\.\w+\[(\w+)\])(\)&&\w+\.\w+\(\2,800,!1,0\),)/g,
-        `${dict.game}.${dict.gIsTeamGame} && __fx.settings.openDonationHistoryFromLb && __fx.donationsTracker.displayHistory($2, ${rawPlayerNames}, ${gIsSingleplayer}), $1 && !isEmptySpace $3`);
+    // match (post-compress): 0===n4[fG]||hX&&!ko&&!hI||nQ(fG,800,!1,0)
+    replaceOne(/(0===\w+\.\w+\[(\w+)\]\|\|\w+\.\w+&&!\w+\.\w+&&!\w+\.\w+)\|\|(\w+\.\w+\(\2,800,!1,0\))/g,
+        `$1||(${dict.game}.${dict.gIsTeamGame}&&__fx.settings.openDonationHistoryFromLb&&__fx.donationsTracker.displayHistory($2,${rawPlayerNames},${gIsSingleplayer}),$3)`);
 
     // Detailed team pie chart percentage
     replaceRawCode(`qr=Math.floor(100*f0+.5)+"%"`,
