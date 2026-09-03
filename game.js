@@ -1556,8 +1556,8 @@ function tH(rE, data, tI) {
 					return aC % 2 == 1 ? bD.color.oH(130, 130, 130, .35) : bE.oM
 				}(aC), tN[aC].style.width = "100%", tN[aC].style.display = "flex", rF[aC] = new Array(lh);
 				for (var fk = 0; fk < lh; fk++) rF[aC][fk] = fU = document.createElement("div"), fU.style.display = "flex", fU.style.justifyContent = "center", fU.style.wordBreak = "break-all", fU.style.padding = "0.4em 0em", fU.style.width = data
-					.tW[fk] + "%", fU.innerHTML = tJ[aC][fk].ft, 1 === tJ[aC][fk].eZ && (fU.name = "" + aC, fU.style.color = bE.pN, fU.style.backgroundColor = tQ, fU.addEventListener("mouseover", rp), fU.addEventListener("mouseout", tX), function(fU,
-						tZ, ta) {
+					.tW[fk] + "%", fU.textContent = tJ[aC][fk].ft, 1 === tJ[aC][fk].eZ && (fU.name = "" + aC, fU.style.color = bE.pN, fU.style.backgroundColor = tQ, fU.addEventListener("mouseover", rp), fU.addEventListener("mouseout", tX), function(
+						fU, tZ, ta) {
 						2147483647 !== ta && fU.addEventListener("click", function() {
 							bG.a8(30), bG.a9(30, tZ), bK.di(bG.aD), this.style.backgroundColor = tQ, u.v(8, u.tb, new tc(25, {
 								action: 0,
@@ -1697,8 +1697,8 @@ function uM(s2) {
 				var sI = document.createElement("span");
 				sI.textContent = (un ? "🟢 " : "⚪ ") + bq.lb.uo(rC, ui), sI.style.color = bq.lb.up(rC.uq), 11 === rC.uq && (sI.style.textShadow = "-1px -1px 0 lightgray,1px -1px 0 lightgray,-1px 1px 0 lightgray,1px 1px 0 lightgray");
 				sI.style.cursor = "pointer", sI.style.margin = "0.2em 0.2em 0.2em 0.2em", sI.style.width = sI.style.maxWidth = 2 === ui ? "10em" : "9em", sI.style.height = sI.style.maxHeight = "1.4em", sI.style.whiteSpace = "nowrap", sI.style
-					.overflow = "hidden", sI.style.textOverflow = "ellipsis", sI.style.font = "inherit", sI.style.display = "inline-block", __fx.settings.highlightDuplicateIps && (un = __fx.utils.getDuplicateIpHighlightColor(rC, bq.uj.uk,
-					"aET")) && (sI.style.backgroundColor = un, sI.style.borderRadius = "0.3em");
+					.overflow = "hidden", sI.style.textOverflow = "ellipsis", sI.style.font = "inherit", sI.style.display = "inline-block", __fx.settings.highlightDuplicateIps && (un = __fx.utils.getDuplicateIpHighlightColor(rC, bq.uj.uk[ui],
+						"aET")) && (sI.style.backgroundColor = un, sI.style.borderRadius = "0.3em");
 				bq.lb.ur(rC) && (sI.style.textDecoration = "underline"), rC.us && (sI.style.textDecorationLine = "underline", sI.style.textDecorationStyle = "dotted");
 				sI.onclick = function(e) {
 					s2(e, rC)
@@ -2044,9 +2044,9 @@ function wL() {
 		r1.length && (wV = r1.split(";"))
 	}, this.get = function() {
 		return wV
-	}, this.wW = function() {
+	}, __fx.followedAccounts.setSource(this.get), this.wW = function() {
 		return {
-			tI: wV,
+			tI: __fx.followedAccounts.decorate(wV),
 			value: 0
 		}
 	}, this.us = function(tZ) {
