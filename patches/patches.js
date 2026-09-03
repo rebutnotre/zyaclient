@@ -27,7 +27,7 @@ export default (/** @type {ModUtils} */ modUtils) => {
 
 	// Reset donation history and leaderboard filter when a new game is started
 	insertCode(`an.init();ai.a5l();bA.pQ.qC = [];bA.hZ.pT = 1;/* here */`,
-	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), __fx.restartGame = () => aE.a5i(), window.aE = aE, window.__fx_replayPhase = 0;`);
+	`__fx.donationsTracker.reset(), __fx.leaderboardFilter.reset(), __fx.customLobby.isActive() && __fx.customLobby.hideWindow(), __fx.trainer?.onGameInit(), (gc => { __fx.restartGame = () => gc.aE(); window.aE = gc; })(this), window.__fx_replayPhase = 0;`);
 
     waitForMinification(() => applyPatches(modUtils))
 }
@@ -59,8 +59,8 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
     replaceOne(/(\(22,"logo",8,")[^"]+"\)/g, "$1" + assets.smallLogo + "\")");
 
     // Add update information
-    replaceRawCode(`new k("🚀 New Game Update","The game was updated! Please reload the game.",!0,[`,
-        `new k("🚀 New Game Update","The game was updated! Please reload the game."
+    replaceRawCode(`new k("🚀 New Game Update","The game was updated! Please reload the game. An internet connection is required.",!0,[`,
+        `new k("🚀 New Game Update","The game was updated! Please reload the game. An internet connection is required."
         + "<div style='border: white; border-width: 1px; border-style: solid; margin: 10px; padding: 5px;'><h2>FX Client is not yet compatible with the latest version of the game.</h2><p>Updates should normally be available within a few hours.<br>You can still use FX to play in singleplayer mode.</p></div>",!0,[`
     );
 
@@ -84,6 +84,7 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
     // Hook bB.hZ.hg — the troop-send function called for all attacks (mouse OR spacebar)
     replaceRawCode(`this.hg=function(il,jd){this.pT&&(this.pT=0,bm.pW.pX(182,il)),aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)}`,
         `this.hg=function(il,jd){__fx.trainer?.onAttackSent?.();this.pT&&(this.pT=0,bm.pW.pX(182,il));const _fire=()=>{aE.ko?bB.pO.hg(aE.et,il,jd):b1.pU.pY(il,jd)};if(__fx.tickDelay?.queue(_fire))return;_fire();}`);
+
 
     // Expose spawn-phase replay progress
     replaceRawCode(`aCC=aD.hH?aB/aD.a5b:`,
@@ -175,12 +176,7 @@ function applyPatches(/** @type {ModUtils} */ { replace, replaceOne, replaceRawC
     replaceOne(/(this\.\w+=function\((\w+),(\w+)\)\{)(\2===\w+\.\w+&&\(\w+\.\w+\((\w+\.\w+)\[0\],\5\[1\],\3\),this\.(\w+)\[12\]\+=\5\[1\],this\.\6\[16\]\+=\5\[0\]\),\3===\w+\.\w+&&\()/g,
         `$1 __fx.donationsTracker.logDonation($2, $3, $5[0], ${dict.sidebar}.${dict.getTime}()); $4`)
 
-    // Display donations for a player when clicking on them in the leaderboard
-    // match (post-compress): 0===n4[fG]||hX&&!ko&&!hI||nQ(fG,800,!1,0)
-    replaceOne(/(0===\w+\.\w+\[(\w+)\]\|\|\w+\.\w+&&!\w+\.\w+&&!\w+\.\w+)\|\|(\w+\.\w+\(\2,800,!1,0\))/g,
-        `$1||(${dict.game}.${dict.gIsTeamGame}&&__fx.settings.openDonationHistoryFromLb&&__fx.donationsTracker.displayHistory($2,${rawPlayerNames},${gIsSingleplayer}),$3)`);
-
-    // Detailed team pie chart percentage
+// Detailed team pie chart percentage
     replaceRawCode(`qr=Math.floor(100*f0+.5)+"%"`,
         `qr = (__fx.settings.detailedTeamPercentage ? (100*f0).toFixed(2) : Math.floor(100*f0+.5)) + "%"`)
     replaceRawCode(",fontSize=+dz*Math.min(f0,.37);", ",fontSize=(__fx.settings.detailedTeamPercentage ? 0.75 : 1)*dz*Math.min(f0,.37);")

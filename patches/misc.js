@@ -1,7 +1,7 @@
 import { definePatch, insert } from "../modUtils.js"
 import { styleText } from "node:util";
 
-export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
+export default definePatch(({ insertCode, modifyCode, replaceCode, replace }) => {
 
   // Display tick number near the moving bars in the balance box
   modifyCode(`zH.fillStyle = eh === 9 ? bD.pD : bD.o5;
@@ -52,8 +52,10 @@ export default definePatch(({ insertCode, modifyCode, replaceCode }) => {
     console.warn("Warning: failed to patch error reporter (game may have updated)")
   }
 
-  // Invalid hostname detection avoidance
-  replaceCode(`this.hostnameIsValid = a.indexOf("territorial.io") >= 0;`, `this.hostnameIsValid = true;`)
+  // Invalid hostname detection avoidance (handles both x>=0 and 0<=x forms)
+  replace(/this\.(\w+)=\w+\.indexOf\("territorial\.io"\)>=0/g, 'this.$1=true')
+  replace(/this\.(\w+)=0<=\w+\.indexOf\("territorial\.io"\)/g, 'this.$1=true')
+
 
   // for the custom lobby version
   try {
