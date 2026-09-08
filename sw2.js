@@ -1,4 +1,4 @@
-const cacheName = "1788891328796"; // this gets replaced by the build script
+const cacheName = "1788908830435"; // this gets replaced by the build script
 
 self.addEventListener("install", (e) => {
   console.log("[Service Worker] Install", cacheName);
